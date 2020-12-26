@@ -83,4 +83,9 @@ public class Control : MonoBehaviour
         Jump();//функция вызова прыжка
         CheckGround();
     }
+    void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector3.down * jumpDistance);
+    }
 }
