@@ -12,6 +12,9 @@ public class WallRunning : MonoBehaviour
     bool parkourAvailableLeft = false;
     public float wallDistance = 0.5f;
     private int layerMask;
+    private Animator animator;
+    public GameObject cam;
+    float ret = 10f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +22,7 @@ public class WallRunning : MonoBehaviour
         body = GetComponent<Rigidbody>();
         layerMask = 1 << gameObject.layer | 1 << 2;
         layerMask = ~layerMask;
+        animator = GetComponentInChildren<Animator>();
     }
     //пускаем лучи что бы понять есть ли стена справа и слева
     void WallRun()
@@ -54,6 +58,14 @@ public class WallRunning : MonoBehaviour
             {
                 if (timer <= 0)
                 {
+                    if (parkourAvailableLeft)
+                    {
+                        animator.SetBool("WallLeft", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("WallRight", true);
+                    }
                     body.velocity = new Vector2(0, 0);//то значит бежим по стене
                 }
                 else
@@ -62,6 +74,11 @@ public class WallRunning : MonoBehaviour
                 }
             }
             //Debug.Log("Бежим по стене");
+        }
+        else
+        {
+            animator.SetBool("WallLeft", false);
+            animator.SetBool("WallRight", false);
         }
     }
     void WallRunningRay()
