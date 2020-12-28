@@ -6,6 +6,7 @@ public class WallRunning : MonoBehaviour
 {
     Transform player;
     Rigidbody body;
+    Vector3 wallRunVec;
     public float jumpForce = 5f;
     float timer = 0f;
     bool parkourAvailableRight = false;
@@ -15,6 +16,7 @@ public class WallRunning : MonoBehaviour
     private Animator animator;
     public GameObject cam;
     float ret = 10f;
+    float speedMove;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,12 +25,15 @@ public class WallRunning : MonoBehaviour
         layerMask = 1 << gameObject.layer | 1 << 2;
         layerMask = ~layerMask;
         animator = GetComponentInChildren<Animator>();
+        speedMove = player.GetComponent<Control>().speedMove;
+        Debug.Log("Speed=" + speedMove);
     }
     //пускаем лучи что бы понять есть ли стена справа и слева
     void WallRun()
     {
-        if(Input.GetAxisRaw("Vertical")>0 && (parkourAvailableRight || parkourAvailableLeft) && !GlobalInfo.ChechGround())//если бежим вперед, около стены и в вохдухе
+        if(Input.GetAxisRaw("Vertical")>0 && (parkourAvailableRight || parkourAvailableLeft) && !GlobalInfo.CheckGround())//если бежим вперед, около стены и в вохдухе
         {
+            GlobalInfo.ChangePodkat(true);
             if (Input.GetKeyDown(KeyCode.Space))//если нам надо оттолкнуться от стены во время
             {//бега по стенам
                 Vector3 vec;//вектор прыжка
@@ -58,6 +63,7 @@ public class WallRunning : MonoBehaviour
             {
                 if (timer <= 0)
                 {
+                    GlobalInfo.ChangeWallRun(true);
                     if (parkourAvailableLeft)
                     {
                         animator.SetBool("WallLeft", true);
@@ -67,6 +73,7 @@ public class WallRunning : MonoBehaviour
                         animator.SetBool("WallRight", true);
                     }
                     body.velocity = new Vector2(0, 0);//то значит бежим по стене
+                    body.MovePosition(body.position + wallRunVec * speedMove * Time.deltaTime);//осуществялем передвижение
                 }
                 else
                 {
@@ -77,6 +84,7 @@ public class WallRunning : MonoBehaviour
         }
         else
         {
+            GlobalInfo.ChangeWallRun(false);
             animator.SetBool("WallLeft", false);
             animator.SetBool("WallRight", false);
         }
@@ -91,7 +99,24 @@ public class WallRunning : MonoBehaviour
             Debug.Log(hit.collider.gameObject.layer);
             if (hit.collider.gameObject.layer == 0)//если это стена
             {
-                Debug.Log("Справа стена");
+                Debug.Log("vec=" + hit.collider.transform.forward);
+                wallRunVec = transform.forward;
+                if (wallRunVec.x < 0)
+                {
+                    wallRunVec.x = -hit.collider.transform.forward.z;
+                }
+                else
+                {
+                    wallRunVec.x = hit.collider.transform.forward.z;
+                }
+                if (wallRunVec.z < 0)
+                {
+                    wallRunVec.z = -hit.collider.transform.forward.x;
+                }
+                else
+                {
+                    wallRunVec.z = hit.collider.transform.forward.x;
+                }
                 parkourAvailableRight = true;//то бег по стенам возможен
             }
             else 
@@ -111,7 +136,24 @@ public class WallRunning : MonoBehaviour
             Debug.Log(hit.collider.gameObject.layer);
             if (hit.collider.gameObject.layer == 0)//если это стена
             {
-                Debug.Log("Cлева стена");
+                Debug.Log("vec="+ hit.collider.transform.forward);
+                wallRunVec = transform.forward;
+                if (wallRunVec.x < 0)
+                {
+                    wallRunVec.x = -hit.collider.transform.forward.z;
+                }
+                else
+                {
+                    wallRunVec.x = hit.collider.transform.forward.z;
+                }
+                if (wallRunVec.z < 0)
+                {
+                    wallRunVec.z = -hit.collider.transform.forward.x;
+                }
+                else
+                {
+                    wallRunVec.z = hit.collider.transform.forward.x;
+                }
                 parkourAvailableLeft = true;//то бег по стенам возможен
             }
             else
@@ -128,14 +170,13 @@ public class WallRunning : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-     //   WallRun();
         
     }
     void Update()
     {
         WallRun();
         WallRunningRay();
- 
+
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
     {

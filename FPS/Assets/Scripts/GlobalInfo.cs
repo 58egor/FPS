@@ -5,7 +5,10 @@ using UnityEngine;
 public static class GlobalInfo
 {
     private static bool isGround=true;
-    public static bool ChechGround()
+    private static bool wallRun = false;
+    private static bool Podkat= false;
+
+    public static bool CheckGround()
     {
         return isGround;
     }
@@ -13,5 +16,21 @@ public static class GlobalInfo
     {
         isGround = change;
         Debug.Log("isGround=" + isGround);
+    }
+    public static bool CheckWallRun()
+    {
+        return wallRun;
+    }
+    public static void ChangeWallRun(bool change)
+    {
+        wallRun = change;
+    }
+    public static bool ChecPodkat()
+    {
+        return Podkat;
+    }
+    public static void ChangePodkat(bool change)
+    {
+        Podkat = change;
     }
 }
