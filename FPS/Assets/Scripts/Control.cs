@@ -17,12 +17,17 @@ public class Control : MonoBehaviour
     public float headMaxY = 40f;
     private int layerMask;
     private Animator animator;
+    public float longOfPodkat = 1f;
     public float timerPodkat = 1f;
+    float timer1, timer2;
     public float podkatSpeed = 15f;
     float speed;
+    bool isSitDown = false;
     // Start is called before the first frame update
     void Start()
     {
+        timer1 = longOfPodkat;
+        timer2 = timerPodkat;
         speed = speedMove;
         player = transform;
         body = GetComponent<Rigidbody>();
@@ -42,10 +47,14 @@ public class Control : MonoBehaviour
             body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение
             Debug.Log("Move");
         }
-        if (true/*GlobalInfo.CheckGround()*/) {
-            body.MovePosition(body.position + right * speed * Time.fixedDeltaTime);//осуществялем передвижение
+        if (GlobalInfo.CheckGround())
+        {
+            body.MovePosition(body.position + right * speedMove * Time.fixedDeltaTime);//осуществялем передвижение
         }
-        //body.AddForce(movement * speedMove);
+        else
+        {
+            body.MovePosition(body.position + right * speedMove / 2 * Time.fixedDeltaTime);//осуществялем передвижение
+        }
     }
     void Rotation()
     {//данная функция отвечает за поворот камеры(игрока)
@@ -62,17 +71,20 @@ public class Control : MonoBehaviour
         movement.z = Input.GetAxisRaw("Vertical");//вперед и назад
         if (Input.GetAxisRaw("Vertical") > 0)
         {
-            timerPodkat -= Time.deltaTime;
-            if (timerPodkat <= 0)
+            if (!GlobalInfo.ChecPodkat())
             {
-                Debug.Log("True");
-                GlobalInfo.ChangePodkat(true);
+                timer2 -= Time.deltaTime;
+                if (timer2 <= 0)
+                {
+                    Debug.Log("True");
+                    GlobalInfo.ChangePodkat(true);
+                }
             }
         }
         else
         {
             GlobalInfo.ChangePodkat(false);
-            timerPodkat = 1f;
+            timer2=timerPodkat;
         }
     }
     //функция прыжка
@@ -81,26 +93,6 @@ public class Control : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && GlobalInfo.CheckGround())//если нажали пробел и на земле
         {
         body.velocity = new Vector2(0, jumpForce);//пинаем вверх
-        //    if (Input.GetAxisRaw("Horizontal") ==0) {
-        //        body.velocity = new Vector2(0, jumpForce);//пинаем вверх
-        //    }
-        //    else
-        //    {
-        //        if (Input.GetAxisRaw("Horizontal") > 0)
-        //        {
-        //            Vector3 vec = player.right;
-        //            vec = new Vector3(vec.x * speedMove, jumpForce, vec.z * speedMove);
-        //            body.velocity = vec;
-        //        }
-        //        else
-        //        {
-        //            Vector3 vec = -player.right;
-        //            vec = new Vector3(vec.x * speedMove, jumpForce, vec.z * speedMove);
-        //            body.velocity = vec;
-        //        }
-
-        //    }
-            //GlobalInfo.ChangeGround(false);
        }
     }
     //проверяем на земле ли
@@ -119,22 +111,41 @@ public class Control : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.C) && GlobalInfo.CheckGround())
         {
-            if (GlobalInfo.ChecPodkat())
+            if (GlobalInfo.ChecPodkat() && timer1>0)
             {
+                timer1 -= Time.deltaTime;//подкат
                 speed = podkatSpeed;
                 Debug.Log("PodkatSpeed");
             }
             else
             {
-                speed = speedMove;
+                speed = speedMove;//сидим
                 Debug.Log("MoveSpeed");
             }
             animator.SetBool("Sit", true);
+            isSitDown = true;
         }
         else
         {
-            speed = speedMove;
-            animator.SetBool("Sit", false);
+            bool upDown = false;
+            if (isSitDown)
+            {
+                RaycastHit hit;
+                Ray ray = new Ray(transform.position, Vector3.up*1);//создаем луч направленный вверх
+                if (Physics.Raycast(ray, out hit, 1, layerMask))//выпускаем луч определннеой длинны
+                {
+                    upDown=true;
+                }
+                else
+                    upDown = false;
+            }
+            if (!upDown)
+            {
+                timer1 = longOfPodkat;
+                speed = speedMove;
+                animator.SetBool("Sit", false);
+                isSitDown = false;
+            }
         }
     }
     // Update is called once per frame
@@ -155,5 +166,7 @@ public class Control : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, Vector3.down * jumpDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector3.up * 1);
     }
 }

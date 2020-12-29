@@ -47,17 +47,10 @@ public class WallRunning : MonoBehaviour
                 {
                      vec = -player.transform.right;//если надо отпрыгнуть влело
                 }
-                    if (vec.x == 0)
-                    {
-                        vec.x = vec.x * jumpForce;//если лево/право на оси х
-                    }
-                    else
-                    {
-                        vec.z = vec.z * jumpForce;//если лево/право на оси у
-                    }
-                    vec.y = jumpForce;//прыжок не только в сторону но и вверх
-                    Debug.Log("vec=" + vec);
-                    body.velocity = vec;//делаем толчок
+                vec = vec * jumpForce;
+                vec.y = jumpForce;//прыжок не только в сторону но и вверх
+                Debug.Log("vec=" + vec);
+                body.velocity = vec;//делаем толчок
             }
             else
             {
@@ -100,22 +93,23 @@ public class WallRunning : MonoBehaviour
             if (hit.collider.gameObject.layer == 0)//если это стена
             {
                 Debug.Log("vec=" + hit.collider.transform.forward);
+                
                 wallRunVec = transform.forward;
                 if (wallRunVec.x < 0)
                 {
-                    wallRunVec.x = -hit.collider.transform.forward.z;
+                    wallRunVec.x = -hit.transform.forward.z;
                 }
                 else
                 {
-                    wallRunVec.x = hit.collider.transform.forward.z;
+                    wallRunVec.x = hit.transform.forward.z;
                 }
                 if (wallRunVec.z < 0)
                 {
-                    wallRunVec.z = -hit.collider.transform.forward.x;
+                    wallRunVec.z = -hit.transform.forward.x;
                 }
                 else
                 {
-                    wallRunVec.z = hit.collider.transform.forward.x;
+                    wallRunVec.z = hit.transform.forward.x;
                 }
                 parkourAvailableRight = true;//то бег по стенам возможен
             }
@@ -136,23 +130,23 @@ public class WallRunning : MonoBehaviour
             Debug.Log(hit.collider.gameObject.layer);
             if (hit.collider.gameObject.layer == 0)//если это стена
             {
-                Debug.Log("vec="+ hit.collider.transform.forward);
+                Debug.Log("vec="+ hit.transform.forward);
                 wallRunVec = transform.forward;
                 if (wallRunVec.x < 0)
                 {
-                    wallRunVec.x = -hit.collider.transform.forward.z;
+                    wallRunVec.x = -hit.transform.forward.z;
                 }
                 else
                 {
-                    wallRunVec.x = hit.collider.transform.forward.z;
+                    wallRunVec.x = hit.transform.forward.z;
                 }
                 if (wallRunVec.z < 0)
                 {
-                    wallRunVec.z = -hit.collider.transform.forward.x;
+                    wallRunVec.z = -hit.transform.forward.x;
                 }
                 else
                 {
-                    wallRunVec.z = hit.collider.transform.forward.x;
+                    wallRunVec.z = hit.transform.forward.x;
                 }
                 parkourAvailableLeft = true;//то бег по стенам возможен
             }
