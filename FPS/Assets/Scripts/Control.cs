@@ -23,6 +23,8 @@ public class Control : MonoBehaviour
     public float podkatSpeed = 15f;
     float speed;
     bool isSitDown = false;
+    public int nJumps = 1;
+    public int jumps = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +48,10 @@ public class Control : MonoBehaviour
         {
             body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение
             Debug.Log("Move");
+        }
+        else
+        {
+            jumps = 0;
         }
         if (GlobalInfo.CheckGround())
         {
@@ -71,7 +77,7 @@ public class Control : MonoBehaviour
         movement.z = Input.GetAxisRaw("Vertical");//вперед и назад
         if (Input.GetAxisRaw("Vertical") > 0)
         {
-            if (!GlobalInfo.ChecPodkat())
+            if (!isSitDown)
             {
                 timer2 -= Time.deltaTime;
                 if (timer2 <= 0)
@@ -93,7 +99,15 @@ public class Control : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && GlobalInfo.CheckGround())//если нажали пробел и на земле
         {
         body.velocity = new Vector2(0, jumpForce);//пинаем вверх
-       }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space) &&  jumps != nJumps)
+            {
+                body.velocity = new Vector2(0, jumpForce);//пинаем вверх
+                jumps++;
+            }
+        }
     }
     //проверяем на земле ли
     void CheckGround()
@@ -103,6 +117,7 @@ public class Control : MonoBehaviour
         if (Physics.Raycast(ray, out hit, jumpDistance, layerMask))//выпускаем луч определннеой длинны
         {
             GlobalInfo.ChangeGround(true);//если попали во что то то стоим на чем то
+            jumps = 0;
         }
         else
         GlobalInfo.ChangeGround(false);//если нет то в воздухе
@@ -119,7 +134,7 @@ public class Control : MonoBehaviour
             }
             else
             {
-                speed = speedMove;//сидим
+                speed = speedMove/2;//сидим
                 Debug.Log("MoveSpeed");
             }
             animator.SetBool("Sit", true);
