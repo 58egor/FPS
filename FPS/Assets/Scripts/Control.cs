@@ -46,8 +46,15 @@ public class Control : MonoBehaviour
         Vector3 right = player.right * movement.x;//двигаемся влево/вправо относительно того куда смотрит игрок
         if (!GlobalInfo.CheckWallRun())
         {
-            body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение
-            Debug.Log("Move");
+            if (GlobalInfo.CheckGround())
+            {
+                body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение
+            }
+            else
+            {
+                body.MovePosition(body.position + forward * speedMove / 2 * Time.fixedDeltaTime);//осуществялем передвижение
+            }
+            //Debug.Log("Move");
         }
         else
         {
@@ -59,7 +66,7 @@ public class Control : MonoBehaviour
         }
         else
         {
-            body.MovePosition(body.position + right * speedMove / 2 * Time.fixedDeltaTime);//осуществялем передвижение
+            body.MovePosition(body.position + right * speedMove /2 * Time.fixedDeltaTime);//осуществялем передвижение
         }
     }
     void Rotation()
@@ -96,15 +103,43 @@ public class Control : MonoBehaviour
     //функция прыжка
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && GlobalInfo.CheckGround())//если нажали пробел и на земле
+        Vector3 vec = new Vector3(0, jumpForce, 0);
+        if (Input.GetAxisRaw("Vertical") > 0)
         {
-        body.velocity = new Vector2(0, jumpForce);//пинаем вверх
+            vec.x = player.forward.x * speedMove/2;
+            vec.z = player.forward.z * speedMove/2;
+        }
+        else
+        {
+            if (Input.GetAxisRaw("Vertical") != 0)
+            {
+                vec.x = -player.forward.x * speedMove/2;
+                vec.z = -player.forward.z * speedMove/2;
+            }
+        }
+        if(Input.GetAxisRaw("Horizontal") > 0)
+        {
+            vec.x = (vec.x + player.right.x * speedMove/2) / 2;
+            vec.z = (vec.z + player.right.z * speedMove/2) / 2;
+        }
+        else
+        {
+            if (Input.GetAxisRaw("Horizontal") != 0)
+            {
+                vec.x = (vec.x + (-player.right.x * speedMove/2)) / 2;
+                vec.z = (vec.z + (-player.right.z * speedMove/2)) / 2;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && (GlobalInfo.CheckGround() || GlobalInfo.CheckWallRun()))//если нажали пробел и на земле
+        {
+        Debug.Log("Kick");
+        body.velocity = vec;//пинаем вверх
         }
         else
         {
             if (Input.GetKeyDown(KeyCode.Space) &&  jumps != nJumps)
             {
-                body.velocity = new Vector2(0, jumpForce);//пинаем вверх
+                body.velocity = vec;//пинаем вверх
                 jumps++;
             }
         }

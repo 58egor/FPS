@@ -950,7 +950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b806a57fc99bbed448edbb745db3a144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMove: 13
+  speedMove: 12
   jumpForce: 5
   jumpDistance: 1.2
   cam: {fileID: 963194228}
@@ -960,6 +960,8 @@ MonoBehaviour:
   longOfPodkat: 1
   timerPodkat: 1
   podkatSpeed: 20
+  nJumps: 1
+  jumps: 0
 --- !u!114 &1339230090
 MonoBehaviour:
   m_ObjectHideFlags: 0
