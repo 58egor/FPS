@@ -41,7 +41,7 @@ public class Control : MonoBehaviour
     }
     public void Moving()
     {
-        Debug.Log(player.forward);
+        //Debug.Log(player.forward);
         Vector3 forward = player.forward * movement.z;//двигаемся вперед/назад относительно того куда смотрит игрок
         Vector3 right = player.right * movement.x;//двигаемся влево/вправо относительно того куда смотрит игрок
         if (!GlobalInfo.CheckWallRun())

@@ -74,7 +74,7 @@ public class WallRunning : MonoBehaviour
                     timer -= Time.deltaTime;
                 }
             }
-            //Debug.Log("Бежим по стене");
+            Debug.Log("Бежим по стене");
         }
         else
         {
@@ -83,9 +83,8 @@ public class WallRunning : MonoBehaviour
             animator.SetBool("WallRight", false);
         }
     }
-    void WallRunningRay()
+    void RayRight()
     {
-        //луч вправо от персонажа
         RaycastHit hit;
         Ray ray = new Ray(transform.position, player.transform.right);//создаем луч направленный вниз
         if (Physics.Raycast(ray, out hit, wallDistance, layerMask))//выпускаем луч определннеой длинны
@@ -93,28 +92,33 @@ public class WallRunning : MonoBehaviour
             Debug.Log(hit.collider.gameObject.layer);
             if (hit.collider.gameObject.layer == 0)//если это стена
             {
-                Debug.Log("vec=" + hit.collider.transform.forward);
-                
-                wallRunVec = transform.forward;
-                if (wallRunVec.x < 0)
+                if (!parkourAvailableRight)
                 {
-                    wallRunVec.x = -hit.transform.forward.z;
+                    wallRunVec = player.forward;
                 }
-                else
-                {
-                    wallRunVec.x = hit.transform.forward.z;
-                }
-                if (wallRunVec.z < 0)
-                {
-                    wallRunVec.z = -hit.transform.forward.x;
-                }
-                else
-                {
-                    wallRunVec.z = hit.transform.forward.x;
-                }
+               // Debug.Log("vec=" + hit.collider.transform.forward);
+
+                //wallRunVec = transform.forward;
+                //if (wallRunVec.x < 0)
+                //{
+                //    wallRunVec.x = -hit.transform.forward.x;
+                //}
+                //else
+                //{
+                //    wallRunVec.x = hit.transform.forward.x;
+                //}
+                //if (wallRunVec.z < 0)
+                //{
+                //    wallRunVec.z = -hit.transform.forward.z;
+                //}
+                //else
+                //{
+                //    wallRunVec.z = hit.transform.forward.z;
+                //}
                 parkourAvailableRight = true;//то бег по стенам возможен
+                Debug.Log("Right1");
             }
-            else 
+            else
             {
                 parkourAvailableRight = false;//иначе нет
             }
@@ -137,25 +141,28 @@ public class WallRunning : MonoBehaviour
                 if (hit.collider.gameObject.layer == 0)//если это стена
                 {
                     Debug.Log("vec2 is working=" + hit.collider.transform.forward);
-
-                    wallRunVec = transform.forward;
-                    if (wallRunVec.x < 0)
+                    if (!parkourAvailableRight)
                     {
-                        wallRunVec.x = -hit.transform.forward.z;
+                        wallRunVec = player.forward;
                     }
-                    else
-                    {
-                        wallRunVec.x = hit.transform.forward.z;
-                    }
-                    if (wallRunVec.z < 0)
-                    {
-                        wallRunVec.z = -hit.transform.forward.x;
-                    }
-                    else
-                    {
-                        wallRunVec.z = hit.transform.forward.x;
-                    }
+                    //if (wallRunVec.x < 0)
+                    //{
+                    //    wallRunVec.x = -hit.transform.forward.x;
+                    //}
+                    //else
+                    //{
+                    //    wallRunVec.x = hit.transform.forward.x;
+                    //}
+                    //if (wallRunVec.z < 0)
+                    //{
+                    //    wallRunVec.z = -hit.transform.forward.z;
+                    //}
+                    //else
+                    //{
+                    //    wallRunVec.z = hit.transform.forward.z;
+                    //}
                     parkourAvailableRight = true;//то бег по стенам возможен
+                    Debug.Log("Right2");
                 }
                 else
                 {
@@ -164,32 +171,40 @@ public class WallRunning : MonoBehaviour
 
             }
         }
+    }
+    void WallRunningRay()
+    {
         //луч влево от персонажа
-        ray = new Ray(transform.position,-player.transform.right);//создаем луч направленный вниз
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position,-player.transform.right);//создаем луч направленный вниз
         if (Physics.Raycast(ray, out hit, wallDistance, layerMask))//выпускаем луч определннеой длинны
         {
             Debug.Log(hit.collider.gameObject.layer);
             if (hit.collider.gameObject.layer == 0)//если это стена
             {
                 Debug.Log("vec="+ hit.transform.forward);
-                wallRunVec = transform.forward;
-                if (wallRunVec.x < 0)
+                if (!parkourAvailableLeft)
                 {
-                    wallRunVec.x = -hit.transform.forward.z;
+                    wallRunVec = player.forward;
                 }
-                else
-                {
-                    wallRunVec.x = hit.transform.forward.z;
-                }
-                if (wallRunVec.z < 0)
-                {
-                    wallRunVec.z = -hit.transform.forward.x;
-                }
-                else
-                {
-                    wallRunVec.z = hit.transform.forward.x;
-                }
+                //if (wallRunVec.x < 0)
+                //{
+                //    wallRunVec.x = -hit.transform.forward.z;
+                //}
+                //else
+                //{
+                //    wallRunVec.x = hit.transform.forward.z;
+                //}
+                //if (wallRunVec.z < 0)
+                //{
+                //    wallRunVec.z = -hit.transform.forward.x;
+                //}
+                //else
+                //{
+                //    wallRunVec.z = hit.transform.forward.x;
+                //}
                 parkourAvailableLeft = true;//то бег по стенам возможен
+                Debug.Log("Left1");
             }
             else
             {
@@ -204,10 +219,10 @@ public class WallRunning : MonoBehaviour
         if (!parkourAvailableLeft)
         {
             Vector3 vec = player.transform.right * -wallDistance;
-            Vector3 vec2 = new Vector3(0, 0, 0);
-            vec2.z = vec.z * Mathf.Cos(degree) - vec.x * Mathf.Sin(degree);
-            vec2.x = vec.x * Mathf.Cos(degree) + vec.z * Mathf.Sin(degree);
-            ray = new Ray(transform.position, vec2);//создаем луч направленный вниз
+            Vector3 vec5 = new Vector3(0, 0, 0);
+            vec5.x = vec.x * Mathf.Cos(degree) - vec.z * Mathf.Sin(degree);
+            vec5.z = vec.z * Mathf.Cos(degree) + vec.x * Mathf.Sin(degree);
+            ray = new Ray(transform.position, vec5);//создаем луч направленный вниз
             if (Physics.Raycast(ray, out hit, wallDistance, layerMask))//выпускаем луч определннеой длинны
             {
                 Debug.Log(hit.collider.gameObject.layer);
@@ -215,24 +230,28 @@ public class WallRunning : MonoBehaviour
                 {
                     Debug.Log("vec2 is working=" + hit.collider.transform.forward);
 
-                    wallRunVec = transform.forward;
-                    if (wallRunVec.x < 0)
+                    if (!parkourAvailableLeft)
                     {
-                        wallRunVec.x = -hit.transform.forward.z;
+                        wallRunVec = player.forward;
                     }
-                    else
-                    {
-                        wallRunVec.x = hit.transform.forward.z;
-                    }
-                    if (wallRunVec.z < 0)
-                    {
-                        wallRunVec.z = -hit.transform.forward.x;
-                    }
-                    else
-                    {
-                        wallRunVec.z = hit.transform.forward.x;
-                    }
+                    //if (wallRunVec.x < 0)
+                    //{
+                    //    wallRunVec.x = -hit.transform.forward.z;
+                    //}
+                    //else
+                    //{
+                    //    wallRunVec.x = hit.transform.forward.z;
+                    //}
+                    //if (wallRunVec.z < 0)
+                    //{
+                    //    wallRunVec.z = -hit.transform.forward.x;
+                    //}
+                    //else
+                    //{
+                    //    wallRunVec.z = hit.transform.forward.x;
+                    //}
                     parkourAvailableRight = true;//то бег по стенам возможен
+                    Debug.Log("Left2");
                 }
                 else
                 {
@@ -249,31 +268,32 @@ public class WallRunning : MonoBehaviour
     }
     void Update()
     {
+        RayRight();
         WallRun();
         WallRunningRay();
 
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
     {
-       // Gizmos.color = Color.red;
-       // Vector3 vec = player.transform.right*wallDistance;
-       // Vector3 vec2=new Vector3(0,0,0);
-       // vec2.z = vec.z * Mathf.Cos(degree) - vec.x * Mathf.Sin(degree);
-       // vec2.x = vec.x * Mathf.Cos(degree) + vec.z * Mathf.Sin(degree);
+        Gizmos.color = Color.red;
+        Vector3 vec = player.transform.right*wallDistance;
+        Vector3 vec2=new Vector3(0,0,0);
+        vec2.z = vec.z * Mathf.Cos(degree) - vec.x * Mathf.Sin(degree);
+        vec2.x = vec.x * Mathf.Cos(degree) + vec.z * Mathf.Sin(degree);
        // Vector3 vec3 = new Vector3(0, 0, 0);
        // vec3.x = vec.x * Mathf.Cos(degree) - vec.z * Mathf.Sin(degree);
        // vec3.z = vec.z * Mathf.Cos(degree) + vec.x * Mathf.Sin(degree);
-       // vec = player.transform.right * -wallDistance;
-       // Vector3 vec4 = new Vector3(0, 0, 0);
-       // vec4.z = vec.z * Mathf.Cos(degree) - vec.x * Mathf.Sin(degree);
-       // vec4.x = vec.x * Mathf.Cos(degree) + vec.z * Mathf.Sin(degree);
-       // Vector3 vec5 = new Vector3(0, 0, 0);
-       // vec5.x = vec.x * Mathf.Cos(degree) - vec.z * Mathf.Sin(degree);
-       // vec5.z = vec.z * Mathf.Cos(degree) + vec.x * Mathf.Sin(degree);
-       // Gizmos.DrawRay(transform.position, (vec2));
+        vec = player.transform.right * -wallDistance;
+        Vector3 vec4 = new Vector3(0, 0, 0);
+        vec4.z = vec.z * Mathf.Cos(degree) - vec.x * Mathf.Sin(degree);
+        vec4.x = vec.x * Mathf.Cos(degree) + vec.z * Mathf.Sin(degree);
+        Vector3 vec5 = new Vector3(0, 0, 0);
+        vec5.x = vec.x * Mathf.Cos(degree) - vec.z * Mathf.Sin(degree);
+        vec5.z = vec.z * Mathf.Cos(degree) + vec.x * Mathf.Sin(degree);
+        Gizmos.DrawRay(transform.position, (vec2));
        // //Gizmos.DrawRay(transform.position, (vec3));
-       //// Gizmos.DrawRay(transform.position, (vec4));
-       // Gizmos.DrawRay(transform.position, (vec5));
+        //Gizmos.DrawRay(transform.position, (vec4));
+        Gizmos.DrawRay(transform.position, (vec5));
        // Gizmos.DrawRay(transform.position, player.transform.right * wallDistance);
        // Gizmos.DrawRay(transform.position, player.transform.right * -wallDistance);
     }

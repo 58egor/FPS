@@ -18,7 +18,7 @@ public class CameraShaker : MonoBehaviour
     }
     void CameraMove()
     {
-        if (Input.GetAxisRaw("Vertical") != 0  && !GlobalInfo.CheckWallRun())
+        if (Input.GetAxisRaw("Vertical") != 0  /*&& !GlobalInfo.CheckWallRun()*/)
         {
             cornerAngle += Time.deltaTime * speed;
             this.gameObject.transform.localPosition = new Vector3(Mathf.Cos(cornerAngle) * scaleX, originalPos.y+ Mathf.Sin(cornerAngle) * Mathf.Cos(cornerAngle) * scaleY, 0);//двигаем камеру по Лемниската Бернулли
