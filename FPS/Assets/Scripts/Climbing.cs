@@ -41,8 +41,11 @@ public class Climbing : MonoBehaviour
             if (hit.collider.gameObject.layer == 0)
             {
                 bodySee = true;
-                newPos.x= hit.point.x;
-                newPos.z = hit.point.z;
+                if (isClimbing)
+                {
+                    newPos.x = hit.point.x;
+                    newPos.z = hit.point.z;
+                }
             }
         }
         else 
@@ -58,12 +61,16 @@ public class Climbing : MonoBehaviour
             if (hit.collider.gameObject.layer == 0)
             {
                 headSee = true;
-                newPos.y = hit.point.y+2;
+               
             }
                 
         }
         else
         {
+            if (!isClimbing)
+            {
+                newPos.y = vec.y + 2;
+            }
             headSee = false;
         }
     }
@@ -71,13 +78,15 @@ public class Climbing : MonoBehaviour
     {
         if (!isUp)
         {
-            if (body.position.y < newPos.y)
+            if (player.position.y < newPos.y)
             {
                 body.MovePosition(body.position + player.up * upSpeed * Time.fixedDeltaTime);//осуществялем передвижение вверх
-                Debug.Log("Вверх");
+                Debug.Log("Вверх."+ "Pos player:" + player.position.y + ",Y pos:" + newPos.y);
+
             }
             else
             {
+                Debug.Log("Pos player:" + player.position.y + ",Y pos:"+newPos.y);
                 Debug.Log("вперед готовимся");
                 isUp = true;
                 lastPos = body.position;
@@ -88,7 +97,7 @@ public class Climbing : MonoBehaviour
         else
         {
             Debug.Log("vpered");
-            if (lastPos!=newPos)
+            if (Vector3.Distance(newPos, body.position)>0.1)
             {
                 Debug.Log("Dif:" + Vector3.Distance(newPos, body.position));
                 lastPos = body.position;
@@ -119,6 +128,7 @@ public class Climbing : MonoBehaviour
             isClimbing = true;//помечаем это
             body.useGravity = false;//отрубаем гравитаюци.
             player.GetComponent<Control>().enabled = false;//отбираем управление у игрока
+            Debug.Log("NewPos:" + newPos);
         }
         
     }

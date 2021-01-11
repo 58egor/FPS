@@ -36,24 +36,38 @@ public class WallRunning : MonoBehaviour
         {
             GlobalInfo.ChangePodkat(true);
             if (Input.GetKeyDown(KeyCode.Space))//если нам надо оттолкнуться от стены во время
-            //{//бега по стенам
-            //    Vector3 vec;//вектор прыжка
+            {//бега по стенам
+                Vector3 vec;//вектор прыжка
                 timer = 0.2f;//отключаем бег по стена на 0.2
-            //    Debug.Log(player.transform.right);
-            //    if (parkourAvailableLeft)
-            //    {
-            //        vec = player.transform.right;//если надо отпрыгнуть врпаво
-            //    }
-            //    else
-            //    {
-            //         vec = -player.transform.right;//если надо отпрыгнуть влело
-            //    }
-            //    vec = vec * jumpForce;
-            //    vec.y = jumpForce;//прыжок не только в сторону но и вверх
-            //    Debug.Log("vec=" + vec);
-            //    body.velocity = vec;//делаем толчок
-            //}
-            //else
+                Debug.Log(player.transform.right);
+                if (parkourAvailableLeft)
+                {
+                    vec = player.transform.right;//если надо отпрыгнуть врпаво
+                }
+                else
+                {
+                    vec = -player.transform.right;//если надо отпрыгнуть влево
+                }
+                vec = vec * jumpForce;
+                //vec.y = jumpForce;//прыжок не только в сторону но и вверх
+                Debug.Log("vec=" + vec);
+                Vector3 vec2 = new Vector3(0, jumpForce, 0);
+                if (Input.GetAxisRaw("Vertical") > 0)
+                {
+                    vec2.x = player.forward.x * speedMove / 2;
+                    vec2.z = player.forward.z * speedMove / 2;
+                }
+                else
+                {
+                    if (Input.GetAxisRaw("Vertical") != 0)
+                    {
+                        vec2.x = -player.forward.x * speedMove / 2;
+                        vec2.z = -player.forward.z * speedMove / 2;
+                    }
+                }
+                body.velocity = vec+vec2;//делаем толчок
+            }
+            else
             {
                 if (timer <= 0)
                 {
@@ -96,25 +110,6 @@ public class WallRunning : MonoBehaviour
                 {
                     wallRunVec = player.forward;
                 }
-               // Debug.Log("vec=" + hit.collider.transform.forward);
-
-                //wallRunVec = transform.forward;
-                //if (wallRunVec.x < 0)
-                //{
-                //    wallRunVec.x = -hit.transform.forward.x;
-                //}
-                //else
-                //{
-                //    wallRunVec.x = hit.transform.forward.x;
-                //}
-                //if (wallRunVec.z < 0)
-                //{
-                //    wallRunVec.z = -hit.transform.forward.z;
-                //}
-                //else
-                //{
-                //    wallRunVec.z = hit.transform.forward.z;
-                //}
                 parkourAvailableRight = true;//то бег по стенам возможен
                 Debug.Log("Right1");
             }
@@ -145,22 +140,6 @@ public class WallRunning : MonoBehaviour
                     {
                         wallRunVec = player.forward;
                     }
-                    //if (wallRunVec.x < 0)
-                    //{
-                    //    wallRunVec.x = -hit.transform.forward.x;
-                    //}
-                    //else
-                    //{
-                    //    wallRunVec.x = hit.transform.forward.x;
-                    //}
-                    //if (wallRunVec.z < 0)
-                    //{
-                    //    wallRunVec.z = -hit.transform.forward.z;
-                    //}
-                    //else
-                    //{
-                    //    wallRunVec.z = hit.transform.forward.z;
-                    //}
                     parkourAvailableRight = true;//то бег по стенам возможен
                     Debug.Log("Right2");
                 }
@@ -187,22 +166,6 @@ public class WallRunning : MonoBehaviour
                 {
                     wallRunVec = player.forward;
                 }
-                //if (wallRunVec.x < 0)
-                //{
-                //    wallRunVec.x = -hit.transform.forward.z;
-                //}
-                //else
-                //{
-                //    wallRunVec.x = hit.transform.forward.z;
-                //}
-                //if (wallRunVec.z < 0)
-                //{
-                //    wallRunVec.z = -hit.transform.forward.x;
-                //}
-                //else
-                //{
-                //    wallRunVec.z = hit.transform.forward.x;
-                //}
                 parkourAvailableLeft = true;//то бег по стенам возможен
                 Debug.Log("Left1");
             }
@@ -234,22 +197,6 @@ public class WallRunning : MonoBehaviour
                     {
                         wallRunVec = player.forward;
                     }
-                    //if (wallRunVec.x < 0)
-                    //{
-                    //    wallRunVec.x = -hit.transform.forward.z;
-                    //}
-                    //else
-                    //{
-                    //    wallRunVec.x = hit.transform.forward.z;
-                    //}
-                    //if (wallRunVec.z < 0)
-                    //{
-                    //    wallRunVec.z = -hit.transform.forward.x;
-                    //}
-                    //else
-                    //{
-                    //    wallRunVec.z = hit.transform.forward.x;
-                    //}
                     parkourAvailableRight = true;//то бег по стенам возможен
                     Debug.Log("Left2");
                 }

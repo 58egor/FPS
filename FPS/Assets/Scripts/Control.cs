@@ -130,14 +130,14 @@ public class Control : MonoBehaviour
                 vec.z = (vec.z + (-player.right.z * speedMove/2)) / 2;
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space) && (GlobalInfo.CheckGround() || GlobalInfo.CheckWallRun()))//если нажали пробел и на земле
+        if (Input.GetKeyDown(KeyCode.Space) && (GlobalInfo.CheckGround() && !GlobalInfo.CheckWallRun()))//если нажали пробел и на земле
         {
         Debug.Log("Kick");
         body.velocity = vec;//пинаем вверх
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Space) &&  jumps != nJumps)
+            if (Input.GetKeyDown(KeyCode.Space) &&  jumps != nJumps && !GlobalInfo.CheckWallRun())
             {
                 body.velocity = vec;//пинаем вверх
                 jumps++;
