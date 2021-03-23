@@ -7,7 +7,8 @@ public static class GlobalInfo
     private static bool isGround=true;
     private static bool wallRun = false;
     private static bool Podkat= false;
-
+    public static float otdachaX;
+    public static float otdachaY;
     public static bool CheckGround()
     {
         return isGround;

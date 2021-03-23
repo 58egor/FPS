@@ -10,21 +10,27 @@ public class RayShooting : MonoBehaviour
     public int maxAmmo=30;
     private bool isReload = false;
     public float reloadTimer;
+    public Transform cam;
     public float maxRazbros;//максимальное значение рандома по коорлинате 
     public float minRazbros;//минимальное значение рандома по коорлинате
     private float thisRazbros;//текущее значение разброса
     public float step;//шаг увелиивающий диапзоно выстрела
     public int razbros;//количество выстрелов увеличивающий разброс
-    private int curRazbros;//текущий разброс
+    private int curRazbros;//текущее количество выстрелов для увеличеня разброса
     public float razbrosTimer;//таймер уменьшающий диапозон разброса при остановки стрельбы
+    public float otdachaY = 0;
+    public float otdachaX = 1;
     private float curRazbrosTimeout;
     private float curReloadTimer;
     private int currentAmmo;
     private float curTimeout;
     private Camera camera;
+    private Control contr;
+    private bool isShooting=false;
     // Start is called before the first frame update
     void Start()
     {
+        contr = GetComponentInParent<Control>();
         curTimeout = timeout;
         camera = Camera.main;
         currentAmmo = maxAmmo;
@@ -35,9 +41,12 @@ public class RayShooting : MonoBehaviour
     }
 
     // Update is called once per frame
+    void FixedUpdate()
+    {
+    }
     void Update()
     {
-        if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0)
+        if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
         {
             curRazbros--;
             curRazbrosTimeout = razbrosTimer;
@@ -50,6 +59,7 @@ public class RayShooting : MonoBehaviour
                 sdvigY = Random.Range(-thisRazbros, thisRazbros);
             }
             currentAmmo--;
+            otdacha();
             Vector3 screenCneter = new Vector3(Screen.width / 2, Screen.height / 2, 0);//определяем центр камеры
             screenCneter.x += sdvigX;//сдвигаем коорлинату
             screenCneter.y += sdvigY;//сдвигаем координату
@@ -73,13 +83,24 @@ public class RayShooting : MonoBehaviour
         else
         {
             curTimeout -= Time.deltaTime;
-            curRazbrosTimeout -= Time.deltaTime;
-            if (curRazbrosTimeout <= 0)
+            if (!Input.GetMouseButton(0) || isReload || currentAmmo <= 0)
             {
-                thisRazbros -= step;
-                if (thisRazbros < minRazbros)
+                Debug.Log("stop sh");
+                if (isShooting)
                 {
-                    thisRazbros = minRazbros;
+                    Debug.Log("Sto shooting");
+                    isShooting = false;
+                    contr.otdachaY = 0;
+                    contr.otdachaX = 0;
+                }
+                curRazbrosTimeout -= Time.deltaTime;
+                if (curRazbrosTimeout <= 0)
+                {
+                    thisRazbros -= step;
+                    if (thisRazbros < minRazbros)
+                    {
+                        thisRazbros = minRazbros;
+                    }
                 }
             }
         }
@@ -89,13 +110,14 @@ public class RayShooting : MonoBehaviour
             isReload = true;
         }
         CheckAmmo();//функция отвечающая за перезарядку
-        CheckRazbros();//функция отвечающая за перезарядку
+        CheckRazbros();//функция отвечающая за увеличение радиуса разброса
 
     }
     public void CheckAmmo() {
         
         if (currentAmmo <= 0 || isReload)//если патронов нету
-        {Debug.Log("Reload:"+curReloadTimer);
+        {
+            Debug.Log("Reload:"+curReloadTimer);
             if (curReloadTimer <= 0)
             {
                 isReload = false;
@@ -118,6 +140,15 @@ public class RayShooting : MonoBehaviour
             {
                 thisRazbros = maxRazbros;
             }
+        }
+    }
+    public void otdacha()
+    {
+        if (!isShooting)
+        {
+            isShooting = true;
+            contr.otdachaY = otdachaY;
+            contr.otdachaX = otdachaX;
         }
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance

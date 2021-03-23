@@ -7,11 +7,12 @@ public class Control : MonoBehaviour
     public float speedMove = 1.5f;
     public float jumpForce=5f;
     public float jumpDistance = 1.2f; // расстояние от центра объекта, до поверхности
-    Transform player;
+    public Transform player;
+    Transform cam;
     Rigidbody body;
     Vector3 movement;
-    public Transform cam;
-    private float rotationY;
+    public Transform point;
+    public float rotationY;
     public float sensitivity = 5f; // чувствительность мыши
     public float headMinY = -40f; // ограничение угла для головы
     public float headMaxY = 40f;
@@ -25,6 +26,9 @@ public class Control : MonoBehaviour
     bool isSitDown = false;
     public int nJumps = 1;
     public int jumps = 0;
+    public bool isShooting = false;
+    public float otdachaX=0;
+    public float otdachaY=0;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,11 +52,11 @@ public class Control : MonoBehaviour
         {
             if (GlobalInfo.CheckGround())
             {
-                body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение
+                body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение вперед/назад
             }
             else
             {
-                body.MovePosition(body.position + forward * speedMove / 2 * Time.fixedDeltaTime);//осуществялем передвижение
+                body.MovePosition(body.position + forward * speedMove / 2 * Time.fixedDeltaTime);//осуществялем передвижение вперед/назад
             }
             //Debug.Log("Move");
         }
@@ -62,20 +66,20 @@ public class Control : MonoBehaviour
         }
         if (GlobalInfo.CheckGround())
         {
-            body.MovePosition(body.position + right * speedMove * Time.fixedDeltaTime);//осуществялем передвижение
+            body.MovePosition(body.position + right * speed * Time.fixedDeltaTime);//осуществялем передвижение влево/вправо
         }
         else
         {
-            body.MovePosition(body.position + right * speedMove /2 * Time.fixedDeltaTime);//осуществялем передвижение
+            body.MovePosition(body.position + right * speedMove /2 * Time.fixedDeltaTime);//осуществялем передвижение влево/вправо
         }
     }
     void Rotation()
-    {//данная функция отвечает за поворот камеры(игрока)
-        float rotationX = player.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivity;
+    {//данная функция отвечает за поворот камеры(игрока). В данном случае камера повторяет координаты за точкой прикреплонной к игроку
+        float rotationX = (player.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivity) + otdachaX;
         player.localEulerAngles = new Vector3(0, rotationX, 0);
-        rotationY += Input.GetAxis("Mouse Y") * sensitivity;
+        rotationY += ((Input.GetAxis("Mouse Y")) * sensitivity)+otdachaY;
         rotationY = Mathf.Clamp(rotationY, headMinY, headMaxY);
-        cam.localEulerAngles = new Vector3(-rotationY, 0, 0);
+        point.localEulerAngles = new Vector3(-rotationY, 0, 0);
     }
     //определение направления движения
     void Dir()
@@ -201,12 +205,14 @@ public class Control : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
+       
         Moving();//вызываем функцию передвижения
         Rotation();
     }
 
     void Update()
     {
+        //otdachaY = GlobalInfo.otdachaY;
         Dir();//вызываем функцию определения направления
         Jump();//функция вызова прыжка
         CheckGround();

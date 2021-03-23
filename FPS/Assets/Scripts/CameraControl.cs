@@ -15,6 +15,8 @@ public class CameraControl : MonoBehaviour
     void Update()
     {
         transform.position = point.position;
+        //Quaternion rot = transform.rotation;
+        //rot.z = point.rotation.z;
         transform.rotation = point.rotation;
     }
 }
