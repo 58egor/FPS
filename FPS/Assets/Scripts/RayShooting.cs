@@ -27,9 +27,12 @@ public class RayShooting : MonoBehaviour
     private Camera camera;
     private Control contr;
     private bool isShooting=false;
+    private Crosshair crosshair;
+    public GameObject Object;
     // Start is called before the first frame update
     void Start()
     {
+        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
         contr = GetComponentInParent<Control>();
         curTimeout = timeout;
         camera = Camera.main;
@@ -48,31 +51,19 @@ public class RayShooting : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
         {
-            curRazbros--;
-            curRazbrosTimeout = razbrosTimer;
-            float sdvigX = Random.Range(-thisRazbros, thisRazbros);//радномим отклонение
-            float sdvigY = Random.Range(-thisRazbros, thisRazbros);//рандомим отклонение
-            while((sdvigX* sdvigX+ sdvigY* sdvigY) > thisRazbros * thisRazbros)//проверяем точка в круге?
-            {
-                Debug.Log("Рандомим заново");//если нет
-                sdvigX = Random.Range(-thisRazbros, thisRazbros);//то рандомим заново
-                sdvigY = Random.Range(-thisRazbros, thisRazbros);
-            }
-            currentAmmo--;
-            otdacha();
-            Vector3 screenCneter = new Vector3(Screen.width / 2, Screen.height / 2, 0);//определяем центр камеры
-            screenCneter.x += sdvigX;//сдвигаем коорлинату
-            screenCneter.y += sdvigY;//сдвигаем координату
-            Ray ray = camera.ScreenPointToRay(screenCneter);
+            currentAmmo--;//уменшьаем количество пуль
+            otdacha();//вызываем функцию отдачи
+            Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
             curTimeout = timeout;
             RaycastHit[] hit;
-            hit = Physics.RaycastAll(ray);
+            hit = Physics.RaycastAll(ray);//делаем выстрел
             for (int i = 0; i < hit.Length; i++)
             {
                 if (i != targets)
                 {
                     Debug.Log("Damage:" + hit[i].collider.name);
                     Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
+                    Instantiate(Object,hit[i].point,Object.transform.rotation);
                 }
                 else
                 {
@@ -96,6 +87,7 @@ public class RayShooting : MonoBehaviour
                 curRazbrosTimeout -= Time.deltaTime;
                 if (curRazbrosTimeout <= 0)
                 {
+                    curRazbrosTimeout = razbrosTimer;
                     thisRazbros -= step;
                     if (thisRazbros < minRazbros)
                     {
@@ -111,7 +103,24 @@ public class RayShooting : MonoBehaviour
         }
         CheckAmmo();//функция отвечающая за перезарядку
         CheckRazbros();//функция отвечающая за увеличение радиуса разброса
-
+        crosshair.UpdateCrosshair(thisRazbros*2, thisRazbros*2);
+    }
+    public Vector3 Razbros()//функция отвечающая ра разброс
+    {
+        curRazbros--;
+        curRazbrosTimeout = razbrosTimer;
+        float sdvigX = Random.Range(-thisRazbros, thisRazbros);//радномим отклонение
+        float sdvigY = Random.Range(-thisRazbros, thisRazbros);//рандомим отклонение
+        while ((sdvigX * sdvigX + sdvigY * sdvigY) > thisRazbros * thisRazbros)//проверяем точка в круге?
+        {
+            Debug.Log("Рандомим заново");//если нет
+            sdvigX = Random.Range(-thisRazbros, thisRazbros);//то рандомим заново
+            sdvigY = Random.Range(-thisRazbros, thisRazbros);
+        }
+        Vector3 screenCneter = new Vector3(Screen.width / 2+ sdvigX, Screen.height / 2+ sdvigY, 0);//определяем центр камеры
+        //screenCneter.x += sdvigX;//сдвигаем коорлинату
+        //screenCneter.y += sdvigY;//сдвигаем координату
+        return screenCneter;
     }
     public void CheckAmmo() {
         
