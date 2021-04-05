@@ -41,6 +41,7 @@ public class RayShooting : MonoBehaviour
         curRazbrosTimeout = razbrosTimer;
         thisRazbros = minRazbros;
         curRazbros = razbros;
+        crosshair.UpdateCrosshairActive(thisRazbros * 2, thisRazbros * 2);
     }
 
     // Update is called once per frame
@@ -93,6 +94,7 @@ public class RayShooting : MonoBehaviour
                     {
                         thisRazbros = minRazbros;
                     }
+                    crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2,true);
                 }
             }
         }
@@ -103,7 +105,6 @@ public class RayShooting : MonoBehaviour
         }
         CheckAmmo();//функция отвечающая за перезарядку
         CheckRazbros();//функция отвечающая за увеличение радиуса разброса
-        crosshair.UpdateCrosshair(thisRazbros*2, thisRazbros*2);
     }
     public Vector3 Razbros()//функция отвечающая ра разброс
     {
@@ -145,10 +146,12 @@ public class RayShooting : MonoBehaviour
         {
             curRazbros = razbros;
             thisRazbros += step;
+          
             if (thisRazbros > maxRazbros)
             {
                 thisRazbros = maxRazbros;
             }
+            crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2, false);
         }
     }
     public void otdacha()
@@ -156,7 +159,9 @@ public class RayShooting : MonoBehaviour
         if (!isShooting)
         {
             isShooting = true;
-            contr.otdachaY = otdachaY;
+            //contr.otdachaY = otdachaY;
+            //contr.otdachaX = otdachaX;
+            contr.otdachaY = otdachaY*Mathf.Sin(otdachaY)*Time.deltaTime;
             contr.otdachaX = otdachaX;
         }
     }
