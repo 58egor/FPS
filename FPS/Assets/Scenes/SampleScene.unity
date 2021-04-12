@@ -1417,6 +1417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xWidht: 0
   yHeight: 0
+  speed: 50
   isAdaptive: 1
 --- !u!1 &1173601104
 GameObject:

@@ -22,9 +22,9 @@ public class Crosshair : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (speedActive > 0 && xWidhtActive<xWidht || speedActive < 0 && xWidhtActive > xWidht /*|| !(xWidht - 1.5 <= xWidhtActive && xWidhtActive <= xWidht + 1.5)*/)
+        if (speedActive > 0 && xWidhtActive < xWidht || speedActive < 0 && xWidhtActive > xWidht /*|| !(xWidht - 1.5 <= xWidhtActive && xWidhtActive <= xWidht + 1.5)*/)
         {
-            
+
             xWidhtActive = xWidhtActive + speedActive * Time.deltaTime;
             Debug.Log("xwidth active:" + xWidhtActive);
         }
@@ -54,7 +54,7 @@ public class Crosshair : MonoBehaviour
             }
         }
     }
-    public void UpdateCrosshairActive(float x, float y)
+    public void UpdateCrosshairActive(float x, float y,float speed)
     {
         if (isAdaptive)
         {
@@ -62,6 +62,7 @@ public class Crosshair : MonoBehaviour
             yHeightActive = y;
             xWidht = x;
             yHeight = y;
+            this.speed = speed;
         }
     }
 }

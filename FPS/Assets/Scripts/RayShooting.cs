@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class RayShooting : MonoBehaviour
 {
-    public float damage = 1f;
-    public int targets = 1;
-    public float timeout = 0.2f;
-    public int maxAmmo=30;
-    private bool isReload = false;
-    public float reloadTimer;
+    public float damage = 1f;//наносимый урон
+    public int targets = 1;//количество поражаемых целей
+    public float timeout = 0.2f;//задержка между выстрелами
+    public int maxAmmo=30;//максимальное количество патронов в обоиме
+    private bool isReload = false;//актива ли перезарядка
+    public float reloadTimer;//время перезарядки
     public Transform cam;
     public float maxRazbros;//максимальное значение рандома по коорлинате 
     public float minRazbros;//минимальное значение рандома по коорлинате
@@ -18,12 +18,14 @@ public class RayShooting : MonoBehaviour
     public int razbros;//количество выстрелов увеличивающий разброс
     private int curRazbros;//текущее количество выстрелов для увеличеня разброса
     public float razbrosTimer;//таймер уменьшающий диапозон разброса при остановки стрельбы
-    public float otdachaY = 0;
-    public float otdachaX = 1;
-    private float curRazbrosTimeout;
-    private float curReloadTimer;
-    private int currentAmmo;
-    private float curTimeout;
+    public float otdachaYmin = 0;//отдача по у
+    public float otdachaYmax = 0;//отдача по у
+    public float otdachaXmin = 1;//отдача по х
+    public float otdachaXmax = 1;//отдача по х
+    private float curRazbrosTimeout;//текущий таймер разброса
+    private float curReloadTimer;//текущий таймер перезарядки
+    private int currentAmmo;//текущее количество патронов
+    private float curTimeout;//текущая задержка между выстрелами
     private Camera camera;
     private Control contr;
     private bool isShooting=false;
@@ -41,7 +43,7 @@ public class RayShooting : MonoBehaviour
         curRazbrosTimeout = razbrosTimer;
         thisRazbros = minRazbros;
         curRazbros = razbros;
-        crosshair.UpdateCrosshairActive(thisRazbros * 2, thisRazbros * 2);
+        crosshair.UpdateCrosshairActive(thisRazbros * 2, thisRazbros * 2,step*10);
     }
 
     // Update is called once per frame
@@ -53,7 +55,7 @@ public class RayShooting : MonoBehaviour
         if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
         {
             currentAmmo--;//уменшьаем количество пуль
-            otdacha();//вызываем функцию отдачи
+            otdacha(currentAmmo);//вызываем функцию отдачи
             Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
             curTimeout = timeout;
             RaycastHit[] hit;
@@ -78,7 +80,7 @@ public class RayShooting : MonoBehaviour
             if (!Input.GetMouseButton(0) || isReload || currentAmmo <= 0)
             {
                 Debug.Log("stop sh");
-                if (isShooting)
+                if (isShooting)//если мышка отпущена или не идет срельба
                 {
                     Debug.Log("Sto shooting");
                     isShooting = false;
@@ -106,7 +108,7 @@ public class RayShooting : MonoBehaviour
         CheckAmmo();//функция отвечающая за перезарядку
         CheckRazbros();//функция отвечающая за увеличение радиуса разброса
     }
-    public Vector3 Razbros()//функция отвечающая ра разброс
+    public Vector3 Razbros()//функция отвечающая за разброс
     {
         curRazbros--;
         curRazbrosTimeout = razbrosTimer;
@@ -119,11 +121,9 @@ public class RayShooting : MonoBehaviour
             sdvigY = Random.Range(-thisRazbros, thisRazbros);
         }
         Vector3 screenCneter = new Vector3(Screen.width / 2+ sdvigX, Screen.height / 2+ sdvigY, 0);//определяем центр камеры
-        //screenCneter.x += sdvigX;//сдвигаем коорлинату
-        //screenCneter.y += sdvigY;//сдвигаем координату
         return screenCneter;
     }
-    public void CheckAmmo() {
+    public void CheckAmmo() {//проверяем патроны
         
         if (currentAmmo <= 0 || isReload)//если патронов нету
         {
@@ -140,12 +140,12 @@ public class RayShooting : MonoBehaviour
             }
         }
     }
-    public void CheckRazbros()
+    public void CheckRazbros()//увеличение разброса
     {
-        if (curRazbros<=0) 
+        if (curRazbros<=0) //если отстреляли нужное количество пуль
         {
             curRazbros = razbros;
-            thisRazbros += step;
+            thisRazbros += step;//увеличиваем разброс на соответствующий шаг
           
             if (thisRazbros > maxRazbros)
             {
@@ -154,16 +154,21 @@ public class RayShooting : MonoBehaviour
             crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2, false);
         }
     }
-    public void otdacha()
+    public void otdacha(int ammo)
     {
-        if (!isShooting)
-        {
             isShooting = true;
-            //contr.otdachaY = otdachaY;
-            //contr.otdachaX = otdachaX;
-            contr.otdachaY = otdachaY*Mathf.Sin(otdachaY)*Time.deltaTime;
-            contr.otdachaX = otdachaX;
-        }
+            float otd= Random.Range(otdachaYmin, otdachaYmax);
+            contr.otdachaY = otd;
+            Debug.Log("Y:" + otd);
+            otd= Random.Range(otdachaXmin, otdachaXmax);
+            contr.otdachaX = otd;
+            Debug.Log("X:" + otd);
+        //Debug.Log("currentAmmo:"+ammo+"%3:"+ammo % 2);
+        //if ((ammo % 2)==0)
+        //{
+        //    otdachaX = -otdachaX;
+        //   Debug.Log("Sbros");
+        //}
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
     {
