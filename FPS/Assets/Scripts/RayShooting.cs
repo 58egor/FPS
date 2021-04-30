@@ -31,9 +31,11 @@ public class RayShooting : MonoBehaviour
     private bool isShooting=false;
     private Crosshair crosshair;
     public GameObject Object;
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponentInParent<Animator>();
         crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
         contr = GetComponentInParent<Control>();
         curTimeout = timeout;
@@ -54,12 +56,15 @@ public class RayShooting : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
         {
+            animator.SetTrigger("Fire");
+            animator.SetBool("FireTest", true);
             currentAmmo--;//уменшьаем количество пуль
             otdacha(currentAmmo);//вызываем функцию отдачи
             Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
             curTimeout = timeout;
             RaycastHit[] hit;
             hit = Physics.RaycastAll(ray);//делаем выстрел
+            curRazbrosTimeout = razbrosTimer;
             for (int i = 0; i < hit.Length; i++)
             {
                 if (i != targets)
@@ -79,6 +84,7 @@ public class RayShooting : MonoBehaviour
             curTimeout -= Time.deltaTime;
             if (!Input.GetMouseButton(0) || isReload || currentAmmo <= 0)
             {
+                animator.SetBool("FireTest", false);
                 Debug.Log("stop sh");
                 if (isShooting)//если мышка отпущена или не идет срельба
                 {
@@ -90,7 +96,7 @@ public class RayShooting : MonoBehaviour
                 curRazbrosTimeout -= Time.deltaTime;
                 if (curRazbrosTimeout <= 0)
                 {
-                    curRazbrosTimeout = razbrosTimer;
+                    //curRazbrosTimeout = razbrosTimer;
                     thisRazbros -= step;
                     if (thisRazbros < minRazbros)
                     {
@@ -102,6 +108,8 @@ public class RayShooting : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.R) && !isReload && !(currentAmmo==maxAmmo))
         {
+            animator.SetTrigger("Reload");
+            animator.SetBool("FireTest", false);
             Debug.Log("ActiveReload");
             isReload = true;
         }
@@ -127,6 +135,10 @@ public class RayShooting : MonoBehaviour
         
         if (currentAmmo <= 0 || isReload)//если патронов нету
         {
+            if (!isReload)
+            {
+                animator.SetTrigger("Reload");
+            }
             Debug.Log("Reload:"+curReloadTimer);
             if (curReloadTimer <= 0)
             {
