@@ -138,6 +138,7 @@ public class RayShooting : MonoBehaviour
             if (!isReload)
             {
                 animator.SetTrigger("Reload");
+                isReload = true;
             }
             Debug.Log("Reload:"+curReloadTimer);
             if (curReloadTimer <= 0)
