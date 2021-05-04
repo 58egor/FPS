@@ -1329,6 +1329,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5651343352196481369, guid: 170ac3f9a43e1424a9acfef6dc23ff7a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651343352196481369, guid: 170ac3f9a43e1424a9acfef6dc23ff7a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651343352196481369, guid: 170ac3f9a43e1424a9acfef6dc23ff7a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 170ac3f9a43e1424a9acfef6dc23ff7a, type: 3}
 --- !u!1 &806318221
@@ -1735,10 +1750,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 737384cccc5c5a641b0dcd9263a9206e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xWidht: 0
-  yHeight: 0
+  xWidht: 30
+  yHeight: 30
   speed: 50
-  isAdaptive: 1
+  isAdaptive: 0
 --- !u!1001 &1168758834
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2035,6 +2050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1306395775}
   - component: {fileID: 1306395777}
+  - component: {fileID: 1306395776}
   m_Layer: 8
   m_Name: Weapon2
   m_TagString: Untagged
@@ -2058,6 +2074,54 @@ Transform:
   m_Father: {fileID: 1890007746}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -3.533, y: -10.584, z: 0.029}
+--- !u!114 &1306395776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306395774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89cdee0614796764e8923d7ace645947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Fire
+    clip: {fileID: 8300000, guid: 608c84a5788c55a4cbae3c4d4a788eef, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
+  - name: On
+    clip: {fileID: 8300000, guid: 9e442ab6b4ec47d4d8fabf707938794d, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
+  - name: Off
+    clip: {fileID: 8300000, guid: 11b005e0d25661f4f862cf7a327f4616, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
+  - name: Magazine Out
+    clip: {fileID: 8300000, guid: fd72ad83952563d48afe0b6dd58b0e67, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
+  - name: Magazine In
+    clip: {fileID: 8300000, guid: b6bc351f5ba59fb4ea3761bd20065dcf, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
 --- !u!95 &1306395777
 Animator:
   serializedVersion: 3
@@ -3000,19 +3064,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   targets: 1
-  timeout: 0.2
+  timeout: 0.1
   maxAmmo: 30
   reloadTimer: 1
   cam: {fileID: 806318222}
-  maxRazbros: 30
-  minRazbros: 20
-  step: 2
-  razbros: 1
+  maxRazbros: 0
+  minRazbros: 0
+  step: 0
+  razbros: 0
   razbrosTimer: 0.5
   otdachaYmin: 0
-  otdachaYmax: 0.2
+  otdachaYmax: 0.15
   otdachaXmin: 0
-  otdachaXmax: 0.2
+  otdachaXmax: 0.15
   Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
 --- !u!1 &2147299555
 GameObject:
