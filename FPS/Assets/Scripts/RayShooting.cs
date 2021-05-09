@@ -11,18 +11,13 @@ public class RayShooting : MonoBehaviour
     private bool isReload = false;//актива ли перезарядка
     public float reloadTimer;//время перезарядки
     public Transform cam;
-    public float maxRazbros;//максимальное значение рандома по коорлинате 
-    public float minRazbros;//минимальное значение рандома по коорлинате
-    private float thisRazbros;//текущее значение разброса
-    public float step;//шаг увелиивающий диапзоно выстрела
-    public int razbros;//количество выстрелов увеличивающий разброс
-    private int curRazbros;//текущее количество выстрелов для увеличеня разброса
-    public float razbrosTimer;//таймер уменьшающий диапозон разброса при остановки стрельбы
+    public float Radius;
+    public int firstInTarget=5;
+    private int curShoots;
     public float otdachaYmin = 0;//отдача по у
     public float otdachaYmax = 0;//отдача по у
     public float otdachaXmin = 1;//отдача по х
     public float otdachaXmax = 1;//отдача по х
-    private float curRazbrosTimeout;//текущий таймер разброса
     private float curReloadTimer;//текущий таймер перезарядки
     private int currentAmmo;//текущее количество патронов
     private float curTimeout;//текущая задержка между выстрелами
@@ -32,6 +27,10 @@ public class RayShooting : MonoBehaviour
     private Crosshair crosshair;
     public GameObject Object;
     private Animator animator;
+    public int normal = 60;
+    public int zoom = 30;
+    public float smooth = 5;
+    bool isZoomed=false;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,10 +41,8 @@ public class RayShooting : MonoBehaviour
         camera = Camera.main;
         currentAmmo = maxAmmo;
         curReloadTimer = reloadTimer;
-        curRazbrosTimeout = razbrosTimer;
-        thisRazbros = minRazbros;
-        curRazbros = razbros;
-        crosshair.UpdateCrosshairActive(thisRazbros * 2, thisRazbros * 2,step*10);
+        curShoots = firstInTarget;
+        crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2,timeout);
     }
 
     // Update is called once per frame
@@ -54,9 +51,24 @@ public class RayShooting : MonoBehaviour
     }
     void Update()
     {
+        crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2, timeout);
+        if (Input.GetMouseButton(1) && !isReload)
+        {
+            if (!isZoomed)
+            {
+                isZoomed = true;
+                animator.SetTrigger("PricelStart");
+                animator.SetBool("Pricel", true);
+            }
+        }
+        else
+        {
+            isZoomed = false;
+            animator.SetTrigger("PricelStop");
+            animator.SetBool("Pricel", false);
+        }
         if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
         {
-            animator.SetTrigger("Fire");
             animator.SetBool("FireTest", true);
             currentAmmo--;//уменшьаем количество пуль
             otdacha(currentAmmo);//вызываем функцию отдачи
@@ -64,7 +76,6 @@ public class RayShooting : MonoBehaviour
             curTimeout = timeout;
             RaycastHit[] hit;
             hit = Physics.RaycastAll(ray);//делаем выстрел
-            curRazbrosTimeout = razbrosTimer;
             for (int i = 0; i < hit.Length; i++)
             {
                 if (i != targets)
@@ -84,7 +95,10 @@ public class RayShooting : MonoBehaviour
             curTimeout -= Time.deltaTime;
             if (!Input.GetMouseButton(0) || isReload || currentAmmo <= 0)
             {
+                curShoots = firstInTarget;
                 animator.SetBool("FireTest", false);
+                contr.otdachaY = 0;
+                contr.otdachaX = 0;
                 Debug.Log("stop sh");
                 if (isShooting)//если мышка отпущена или не идет срельба
                 {
@@ -92,17 +106,6 @@ public class RayShooting : MonoBehaviour
                     isShooting = false;
                     contr.otdachaY = 0;
                     contr.otdachaX = 0;
-                }
-                curRazbrosTimeout -= Time.deltaTime;
-                if (curRazbrosTimeout <= 0)
-                {
-                    //curRazbrosTimeout = razbrosTimer;
-                    thisRazbros -= step;
-                    if (thisRazbros < minRazbros)
-                    {
-                        thisRazbros = minRazbros;
-                    }
-                    crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2,true);
                 }
             }
         }
@@ -114,21 +117,27 @@ public class RayShooting : MonoBehaviour
             isReload = true;
         }
         CheckAmmo();//функция отвечающая за перезарядку
-        CheckRazbros();//функция отвечающая за увеличение радиуса разброса
     }
     public Vector3 Razbros()//функция отвечающая за разброс
     {
-        curRazbros--;
-        curRazbrosTimeout = razbrosTimer;
-        float sdvigX = Random.Range(-thisRazbros, thisRazbros);//радномим отклонение
-        float sdvigY = Random.Range(-thisRazbros, thisRazbros);//рандомим отклонение
-        while ((sdvigX * sdvigX + sdvigY * sdvigY) > thisRazbros * thisRazbros)//проверяем точка в круге?
+        float sdvigX = 0;
+        float sdvigY = 0;
+        if (curShoots == 0 && !isZoomed)
         {
-            Debug.Log("Рандомим заново");//если нет
-            sdvigX = Random.Range(-thisRazbros, thisRazbros);//то рандомим заново
-            sdvigY = Random.Range(-thisRazbros, thisRazbros);
+            sdvigX = Random.Range(-Radius, Radius);//радномим отклонение
+            sdvigY = Random.Range(-Radius, Radius);//рандомим отклонение
+            while ((sdvigX * sdvigX + sdvigY * sdvigY) > Radius * Radius)//проверяем точка в круге?
+            {
+                Debug.Log("Рандомим заново");//если нет
+                sdvigX = Random.Range(-Radius, Radius);//то рандомим заново
+                sdvigY = Random.Range(-Radius, Radius);
+            }
         }
         Vector3 screenCneter = new Vector3(Screen.width / 2+ sdvigX, Screen.height / 2+ sdvigY, 0);//определяем центр камеры
+        if (curShoots != 0)
+        {
+            curShoots--;
+        }
         return screenCneter;
     }
     public void CheckAmmo() {//проверяем патроны
@@ -138,6 +147,7 @@ public class RayShooting : MonoBehaviour
             if (!isReload)
             {
                 animator.SetTrigger("Reload");
+                isZoomed = false;
                 isReload = true;
             }
             Debug.Log("Reload:"+curReloadTimer);
@@ -153,29 +163,36 @@ public class RayShooting : MonoBehaviour
             }
         }
     }
-    public void CheckRazbros()//увеличение разброса
-    {
-        if (curRazbros<=0) //если отстреляли нужное количество пуль
-        {
-            curRazbros = razbros;
-            thisRazbros += step;//увеличиваем разброс на соответствующий шаг
+    //public void CheckRazbros()//увеличение разброса
+    //{
+    //    if (curRazbros<=0) //если отстреляли нужное количество пуль
+    //    {
+    //        curRazbros = razbros;
+    //        thisRazbros += step;//увеличиваем разброс на соответствующий шаг
           
-            if (thisRazbros > maxRazbros)
-            {
-                thisRazbros = maxRazbros;
-            }
-            crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2, false);
-        }
-    }
+    //        if (thisRazbros > maxRazbros)
+    //        {
+    //            thisRazbros = maxRazbros;
+    //        }
+    //        crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2, false);
+    //    }
+    //}
     public void otdacha(int ammo)
     {
             isShooting = true;
             float otd= Random.Range(otdachaYmin, otdachaYmax);
             contr.otdachaY = otd;
             Debug.Log("Y:" + otd);
-            otd= Random.Range(otdachaXmin, otdachaXmax);
+        if (!isZoomed)
+        {
+            otd = Random.Range(otdachaXmin, otdachaXmax);
             contr.otdachaX = otd;
             Debug.Log("X:" + otd);
+        }
+        else
+        {
+            contr.otdachaX = 0;
+        }
         //Debug.Log("currentAmmo:"+ammo+"%3:"+ammo % 2);
         //if ((ammo % 2)==0)
         //{

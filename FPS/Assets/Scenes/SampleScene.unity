@@ -151,16 +151,16 @@ MonoBehaviour:
   maxAmmo: 30
   reloadTimer: 1
   cam: {fileID: 806318222}
-  maxRazbros: 30
-  minRazbros: 20
-  step: 2
-  razbros: 1
-  razbrosTimer: 0.5
+  Radius: 0
+  firstInTarget: 5
   otdachaYmin: 0
   otdachaYmax: 0.2
   otdachaXmin: 0
   otdachaXmax: 0.2
   Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
+  normal: 60
+  zoom: 30
+  smooth: 5
 --- !u!1 &187432134
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,16 +772,16 @@ MonoBehaviour:
   maxAmmo: 30
   reloadTimer: 1
   cam: {fileID: 806318222}
-  maxRazbros: 30
-  minRazbros: 20
-  step: 2
-  razbros: 1
-  razbrosTimer: 0.5
+  Radius: 0
+  firstInTarget: 5
   otdachaYmin: 0
   otdachaYmax: 0.2
   otdachaXmin: 0
   otdachaXmax: 0.2
   Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
+  normal: 60
+  zoom: 30
+  smooth: 5
 --- !u!114 &624132643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1481,7 +1481,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   m_Layer: 8
   m_Name: Main Camera
@@ -1525,7 +1524,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1557,21 +1556,6 @@ Transform:
   m_Father: {fileID: 1339230088}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &963194229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6956d5f89e2754649a078b9c40e3a3f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3
-  scaleX: 0.2
-  scaleY: 0.2
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1753,7 +1737,7 @@ MonoBehaviour:
   xWidht: 30
   yHeight: 30
   speed: 50
-  isAdaptive: 0
+  isAdaptive: 1
 --- !u!1001 &1168758834
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2130,7 +2114,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306395774}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5179a8e59e199f14b8210d86c46f7152, type: 2}
   m_CullingMode: 0
@@ -3068,16 +3052,16 @@ MonoBehaviour:
   maxAmmo: 30
   reloadTimer: 1
   cam: {fileID: 806318222}
-  maxRazbros: 0
-  minRazbros: 0
-  step: 0
-  razbros: 0
-  razbrosTimer: 0.5
+  Radius: 10
+  firstInTarget: 5
   otdachaYmin: 0
   otdachaYmax: 0.15
   otdachaXmin: 0
   otdachaXmax: 0.15
   Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
+  normal: 60
+  zoom: 30
+  smooth: 5
 --- !u!1 &2147299555
 GameObject:
   m_ObjectHideFlags: 0
