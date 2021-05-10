@@ -60,12 +60,14 @@ public class RayShooting : MonoBehaviour
                 animator.SetTrigger("PricelStart");
                 animator.SetBool("Pricel", true);
             }
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, zoom, Time.deltaTime * smooth);
         }
         else
         {
             isZoomed = false;
             animator.SetTrigger("PricelStop");
             animator.SetBool("Pricel", false);
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, normal, Time.deltaTime * smooth);
         }
         if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
         {

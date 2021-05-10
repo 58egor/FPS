@@ -2114,7 +2114,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306395774}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 5179a8e59e199f14b8210d86c46f7152, type: 2}
   m_CullingMode: 0
@@ -3061,7 +3061,7 @@ MonoBehaviour:
   Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
   normal: 60
   zoom: 30
-  smooth: 5
+  smooth: 7
 --- !u!1 &2147299555
 GameObject:
   m_ObjectHideFlags: 0

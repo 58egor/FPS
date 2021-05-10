@@ -29,15 +29,22 @@ public class Control : MonoBehaviour
     public bool isShooting = false;
     public float otdachaX=0;
     public float otdachaY=0;
+    public float DashTime = 0.5f;
+    float CurrentDashTime = 0;
+    public float DashSpeed = 5;
+    bool DashActive = false;
+    RigidbodyConstraints contains;
     // Start is called before the first frame update
     void Start()
     {
+
         timer1 = longOfPodkat;
         timer2 = timerPodkat;
         speed = speedMove;
         player = transform;
         body = GetComponent<Rigidbody>();
         body.freezeRotation = true;
+        contains = body.constraints;
         layerMask = 1 << gameObject.layer | 1 << 2;
         animator = GetComponentInChildren<Animator>();
         layerMask = ~layerMask;
@@ -45,6 +52,7 @@ public class Control : MonoBehaviour
     }
     public void Moving()
     {
+
         //Debug.Log(player.forward);
         Vector3 forward = player.forward * movement.z;//двигаемся вперед/назад относительно того куда смотрит игрок
         Vector3 right = player.right * movement.x;//двигаемся влево/вправо относительно того куда смотрит игрок
@@ -53,6 +61,7 @@ public class Control : MonoBehaviour
             if (GlobalInfo.CheckGround())
             {
                 body.MovePosition(body.position + forward * speed * Time.fixedDeltaTime);//осуществялем передвижение вперед/назад
+               
             }
             else
             {
@@ -71,6 +80,32 @@ public class Control : MonoBehaviour
         else
         {
             body.MovePosition(body.position + right * speedMove /2 * Time.fixedDeltaTime);//осуществялем передвижение влево/вправо
+        }
+    }
+    void Dash()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && DashActive == false)
+        {
+            body.constraints = RigidbodyConstraints.FreezePositionY;
+            Debug.Log("Dash");
+            float hor = Input.GetAxisRaw("Horizontal");
+            float ver = Input.GetAxisRaw("Vertical");
+            body.velocity = new Vector3(DashSpeed * hor, 0, DashSpeed * ver);
+            CurrentDashTime = DashTime;
+            DashActive = true;
+        }
+        if (DashActive)
+        {
+            if (CurrentDashTime > 0)
+            {
+                CurrentDashTime -= Time.deltaTime;
+            }
+            else
+            {
+                body.velocity = new Vector3(0, 0, 0);
+                body.constraints = contains;
+                DashActive = false;
+            }
         }
     }
     void Rotation()
@@ -212,11 +247,13 @@ public class Control : MonoBehaviour
 
     void Update()
     {
+        
         //otdachaY = GlobalInfo.otdachaY;
         Dir();//вызываем функцию определения направления
         Jump();//функция вызова прыжка
         CheckGround();
         SitDown();
+        Dash();
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
     {
