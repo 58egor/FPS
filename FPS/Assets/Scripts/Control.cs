@@ -31,9 +31,16 @@ public class Control : MonoBehaviour
     public float otdachaY=0;
     public float DashTime = 0.5f;
     float CurrentDashTime = 0;
+    float dashUp;
     public float DashSpeed = 5;
+    public float dashCd=5;
+    public int MaxDash = 2;
+    int dashEnabled;
     bool DashActive = false;
     RigidbodyConstraints contains;
+    RigidbodyConstraints contains2;
+    AudioManager audio;
+    Vector3 dashTraectory;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,9 +52,13 @@ public class Control : MonoBehaviour
         body = GetComponent<Rigidbody>();
         body.freezeRotation = true;
         contains = body.constraints;
+        contains2 = body.constraints | RigidbodyConstraints.FreezePositionY;
         layerMask = 1 << gameObject.layer | 1 << 2;
         animator = GetComponentInChildren<Animator>();
         layerMask = ~layerMask;
+        dashEnabled = MaxDash;
+        audio = GetComponent<AudioManager>();
+        dashUp = dashCd;
         Debug.Log(layerMask);
     }
     public void Moving()
@@ -84,13 +95,30 @@ public class Control : MonoBehaviour
     }
     void Dash()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && DashActive == false)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && DashActive == false && dashEnabled!=0)
         {
-            body.constraints = RigidbodyConstraints.FreezePositionY;
+            
+            body.constraints = contains2;
             Debug.Log("Dash");
+            Vector3 vec = new Vector3(0, 0, 0);
             float hor = Input.GetAxisRaw("Horizontal");
             float ver = Input.GetAxisRaw("Vertical");
-            body.velocity = new Vector3(DashSpeed * hor, 0, DashSpeed * ver);
+                if (ver != 0)
+                {
+                    vec = transform.forward * ver;
+                }
+                if (hor != 0)
+                {
+                    vec += (transform.right * hor);
+                }
+                if (Mathf.Abs(hor) + Mathf.Abs(ver) != 0)
+                {
+                    vec = vec / (Mathf.Abs(hor) + Mathf.Abs(ver));
+                }
+                dashTraectory = vec;
+                dashEnabled--;
+            audio.Play("Dash");
+            body.velocity = dashTraectory * DashSpeed;
             CurrentDashTime = DashTime;
             DashActive = true;
         }
@@ -105,6 +133,19 @@ public class Control : MonoBehaviour
                 body.velocity = new Vector3(0, 0, 0);
                 body.constraints = contains;
                 DashActive = false;
+            }
+        }
+        if (dashEnabled < MaxDash)
+        {
+            if (dashUp > 0)
+            {
+                dashUp -= Time.deltaTime;
+            }
+            else
+            {
+                Debug.Log("DashAdd");
+                dashUp = dashCd;
+                dashEnabled++;
             }
         }
     }
@@ -240,7 +281,7 @@ public class Control : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-       
+       if(!DashActive)
         Moving();//вызываем функцию передвижения
         Rotation();
     }

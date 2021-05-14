@@ -2140,6 +2140,7 @@ GameObject:
   - component: {fileID: 1339230090}
   - component: {fileID: 1339230092}
   - component: {fileID: 1339230091}
+  - component: {fileID: 1339230093}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -2205,7 +2206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b806a57fc99bbed448edbb745db3a144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMove: 12
+  speedMove: 11
   jumpForce: 5
   jumpDistance: 1.2
   player: {fileID: 0}
@@ -2222,6 +2223,10 @@ MonoBehaviour:
   isShooting: 0
   otdachaX: 0
   otdachaY: 0
+  DashTime: 0.2
+  DashSpeed: 30
+  dashCd: 1.5
+  MaxDash: 2
 --- !u!114 &1339230090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2229,7 +2234,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339230085}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5577665ab161964aa1502d443980d3d, type: 3}
   m_Name: 
@@ -2264,7 +2269,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339230085}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 822b5a59355033d4795b854a4b69643a, type: 3}
   m_Name: 
@@ -2272,6 +2277,26 @@ MonoBehaviour:
   headRay: 0.51
   rayDistance: 1
   upSpeed: 4
+--- !u!114 &1339230093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339230085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89cdee0614796764e8923d7ace645947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Dash
+    clip: {fileID: 8300000, guid: 3ad95b2a72f84d646924b36b850ececa, type: 3}
+    volume: 1
+    pitch: 1.1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
 --- !u!1 &1361157480
 GameObject:
   m_ObjectHideFlags: 0

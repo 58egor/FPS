@@ -124,15 +124,17 @@ public class RayShooting : MonoBehaviour
     {
         float sdvigX = 0;
         float sdvigY = 0;
-        if (curShoots == 0 && !isZoomed)
+        float rad = Radius;
+        if (isZoomed) rad = rad / 2;
+        if (curShoots == 0)
         {
-            sdvigX = Random.Range(-Radius, Radius);//радномим отклонение
-            sdvigY = Random.Range(-Radius, Radius);//рандомим отклонение
-            while ((sdvigX * sdvigX + sdvigY * sdvigY) > Radius * Radius)//проверяем точка в круге?
+            sdvigX = Random.Range(-rad, rad);//радномим отклонение
+            sdvigY = Random.Range(-rad, rad);//рандомим отклонение
+            while ((sdvigX * sdvigX + sdvigY * sdvigY) > rad * rad)//проверяем точка в круге?
             {
                 Debug.Log("Рандомим заново");//если нет
-                sdvigX = Random.Range(-Radius, Radius);//то рандомим заново
-                sdvigY = Random.Range(-Radius, Radius);
+                sdvigX = Random.Range(-rad, rad);//то рандомим заново
+                sdvigY = Random.Range(-rad, rad);
             }
         }
         Vector3 screenCneter = new Vector3(Screen.width / 2+ sdvigX, Screen.height / 2+ sdvigY, 0);//определяем центр камеры
@@ -182,19 +184,28 @@ public class RayShooting : MonoBehaviour
     public void otdacha(int ammo)
     {
             isShooting = true;
-            float otd= Random.Range(otdachaYmin, otdachaYmax);
+        float otd;
+        if (isZoomed)
+        {
+            otd = Random.Range(otdachaYmin/2, otdachaYmax/2);
+        }
+        else
+        {
+            otd = Random.Range(otdachaYmin, otdachaYmax);
+        }
             contr.otdachaY = otd;
             Debug.Log("Y:" + otd);
         if (!isZoomed)
         {
             otd = Random.Range(otdachaXmin, otdachaXmax);
-            contr.otdachaX = otd;
-            Debug.Log("X:" + otd);
+            
         }
         else
         {
-            contr.otdachaX = 0;
+            otd = Random.Range(otdachaXmin/2, otdachaXmax/2);
         }
+        contr.otdachaX = otd;
+        Debug.Log("X:" + otd);
         //Debug.Log("currentAmmo:"+ammo+"%3:"+ammo % 2);
         //if ((ammo % 2)==0)
         //{
