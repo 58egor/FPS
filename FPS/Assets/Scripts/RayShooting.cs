@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RayShooting : MonoBehaviour
 {
-    public float damage = 1f;//наносимый урон
+    public int damage = 1;//наносимый урон
     public int targets = 1;//количество поражаемых целей
     public float timeout = 0.2f;//задержка между выстрелами
     public int maxAmmo=30;//максимальное количество патронов в обоиме
@@ -78,13 +78,32 @@ public class RayShooting : MonoBehaviour
             curTimeout = timeout;
             RaycastHit[] hit;
             hit = Physics.RaycastAll(ray);//делаем выстрел
+            for (int i = 0; i < hit.Length-1; i++)
+            {
+                for(int j = 0; j < hit.Length; j++)
+                {
+                    if (hit[i].distance > hit[j].distance)
+                    {
+                        RaycastHit copy = hit[i];
+                        hit[i] = hit[j];
+                        hit[j] = copy;
+                    }
+                }
+            } 
             for (int i = 0; i < hit.Length; i++)
             {
                 if (i != targets)
                 {
                     Debug.Log("Damage:" + hit[i].collider.name);
-                    Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
-                    Instantiate(Object,hit[i].point,Object.transform.rotation);
+                    if (hit[i].collider.gameObject.layer == 9)
+                    {
+                        hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);
+                    }
+                    else
+                    {
+                        Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
+                        Instantiate(Object, hit[i].point, Object.transform.rotation);
+                    }
                 }
                 else
                 {
