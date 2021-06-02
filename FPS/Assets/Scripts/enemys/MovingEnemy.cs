@@ -10,7 +10,9 @@ public class MovingEnemy : MonoBehaviour
     public float speed = 15f;
     NavMeshAgent agent;
     public float range = 10f;
-    
+    Animator animator;
+    public int procentOfSound = 5;
+    AudioManager audio;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,8 @@ public class MovingEnemy : MonoBehaviour
         body.freezeRotation = true;
         agent=GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player").transform;
+        animator = transform.GetChild(0).GetComponent<Animator>();
+        audio = GetComponent<AudioManager>();
     }
     void look()
     {
@@ -34,10 +38,30 @@ public class MovingEnemy : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(transform.position,transform.forward, out hit,range);
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) *range, Color.yellow);
-        if (hit.transform.gameObject.layer == 8)
+        if (hit.collider != null)
         {
-            Debug.Log("Player hit");
+            if (hit.transform.gameObject.layer == 8)
+            {
+                if (Random.Range(0, 100) < procentOfSound)
+                {
+                    if (!audio.isPlaying("Hit"))
+                    {
+                        audio.Play("Hit");
+                    }
+                }
+                animator.SetBool("Hit", true);
+                Debug.Log("Player hit");
+            }
+            else
+            {
+                animator.SetBool("Hit", false);
+            }
         }
+        else
+        {
+            animator.SetBool("Hit", false);
+        }
+
     }
     // Update is called once per frame
     void Update()

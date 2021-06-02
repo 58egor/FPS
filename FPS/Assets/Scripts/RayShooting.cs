@@ -78,9 +78,10 @@ public class RayShooting : MonoBehaviour
             curTimeout = timeout;
             RaycastHit[] hit;
             hit = Physics.RaycastAll(ray);//делаем выстрел
-            for (int i = 0; i < hit.Length-1; i++)
+            for (int i = 0; i < hit.Length; i++)
             {
-                for(int j = 0; j < hit.Length; j++)
+
+                for (int j = i; j < hit.Length; j++)
                 {
                     if (hit[i].distance > hit[j].distance)
                     {
@@ -89,20 +90,28 @@ public class RayShooting : MonoBehaviour
                         hit[j] = copy;
                     }
                 }
-            } 
+            }
+            Debug.Log("hit lenght:" + hit.Length);
+            for(int i=0;i < hit.Length; i++)
+            {
+                Debug.Log("hit:" + hit[i].collider.name);
+            }
             for (int i = 0; i < hit.Length; i++)
             {
-                if (i != targets)
+                //Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
+             //   Debug.DrawLine(ray.origin, ray.direction * 10, Color.green, 5);
+                if (i <targets)
                 {
                     Debug.Log("Damage:" + hit[i].collider.name);
                     if (hit[i].collider.gameObject.layer == 9)
                     {
                         hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);
+                     //  Debug.DrawLine(ray.origin, ray, Color.green, 5);
                     }
                     else
                     {
-                        Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
-                        Instantiate(Object, hit[i].point, Object.transform.rotation);
+                       // Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
+          //              Instantiate(Object, hit[i].point, Object.transform.rotation);
                     }
                 }
                 else

@@ -40,4 +40,15 @@ public class AudioManager : MonoBehaviour
             return;
         s.audioSource.Stop();
     }
+    public bool isPlaying(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.Log("Dont Play");
+            return true;
+
+        }
+        return s.audioSource.isPlaying;
+    }
 }
