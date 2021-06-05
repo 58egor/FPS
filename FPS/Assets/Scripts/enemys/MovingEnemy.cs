@@ -74,4 +74,8 @@ public class MovingEnemy : MonoBehaviour
     {
         moving();
     }
+    private void OnDisable()
+    {
+        animator.SetBool("Hit", false);
+    }
 }
