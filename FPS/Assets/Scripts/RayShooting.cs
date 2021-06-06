@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RayShooting : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class RayShooting : MonoBehaviour
     public int zoom = 30;
     public float smooth = 5;
     bool isZoomed=false;
+    Text text;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,8 @@ public class RayShooting : MonoBehaviour
         curReloadTimer = reloadTimer;
         curShoots = firstInTarget;
         crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2,timeout);
+        text = GameObject.Find("Ammo").GetComponent<Text>();
+        text.text = currentAmmo.ToString();
     }
 
     // Update is called once per frame
@@ -147,6 +151,7 @@ public class RayShooting : MonoBehaviour
             isReload = true;
         }
         CheckAmmo();//функция отвечающая за перезарядку
+        text.text = currentAmmo.ToString();
     }
     public Vector3 Razbros()//функция отвечающая за разброс
     {

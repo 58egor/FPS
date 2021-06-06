@@ -22,6 +22,9 @@ public class MovingEnemy : MonoBehaviour
         player = GameObject.Find("Player").transform;
         animator = transform.GetChild(0).GetComponent<Animator>();
         audio = GetComponent<AudioManager>();
+        audio.Play("Charge");
+        speed = Random.Range(4, 13);
+        agent.speed = speed;
     }
     void look()
     {
@@ -49,6 +52,14 @@ public class MovingEnemy : MonoBehaviour
                         audio.Play("Hit");
                     }
                 }
+                if (hit.distance < 1f)
+                {
+                    agent.speed = 0;
+                }
+                else
+                {
+                    agent.speed = speed;
+                }
                 animator.SetBool("Hit", true);
                 Debug.Log("Player hit");
             }
@@ -56,6 +67,7 @@ public class MovingEnemy : MonoBehaviour
             {
                 animator.SetBool("Hit", false);
             }
+            Debug.Log("Distance:" + hit.distance);
         }
         else
         {
