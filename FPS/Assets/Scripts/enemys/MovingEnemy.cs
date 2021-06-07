@@ -13,6 +13,9 @@ public class MovingEnemy : MonoBehaviour
     Animator animator;
     public int procentOfSound = 5;
     AudioManager audio;
+    bool OnGround = false;
+    private int layerMask;
+    public float jumpDistance = 1.2f; // расстояние от центра объекта, до поверхности
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +28,8 @@ public class MovingEnemy : MonoBehaviour
         audio.Play("Charge");
         speed = Random.Range(4, 13);
         agent.speed = speed;
+        layerMask = 1 << gameObject.layer | 1 << 2;
+        layerMask = ~layerMask;
     }
     void look()
     {
@@ -34,7 +39,15 @@ public class MovingEnemy : MonoBehaviour
     {
         //Vector3 forward = transform.forward;
         //body.MovePosition(body.position + forward* speed * Time.fixedDeltaTime);
-        agent.SetDestination(player.position);
+        float distance = Vector3.Distance(transform.position, player.position);
+        Debug.Log("Distance:" + distance);
+        if (distance > 1.2f)
+        {
+            //    Vector3 dirToPlayer = transform.position - player.position;
+            //    Vector3 newPos = transform.position + dirToPlayer;
+            //    agent.Warp(newPos);
+            agent.SetDestination(player.position);
+        }
     }
     void check()
     {
@@ -52,14 +65,14 @@ public class MovingEnemy : MonoBehaviour
                         audio.Play("Hit");
                     }
                 }
-                if (hit.distance < 1f)
-                {
-                    agent.speed = 0;
-                }
-                else
-                {
-                    agent.speed = speed;
-                }
+                //if (hit.distance < 1f)
+                //{
+                //    agent.speed = 0;
+                //}
+                //else
+                //{
+                //    agent.speed = speed;
+                //}
                 animator.SetBool("Hit", true);
                 Debug.Log("Player hit");
             }
@@ -75,16 +88,41 @@ public class MovingEnemy : MonoBehaviour
         }
 
     }
+    void CheckGround()
+    {
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position, Vector3.down);//создаем луч направленный вниз
+        if (Physics.Raycast(ray, out hit, jumpDistance, layerMask))//выпускаем луч определннеой длинны
+        {
+            agent.enabled = true;
+            OnGround = true;
+        }
+        else
+        {
+            OnGround = false;
+            agent.enabled = false;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
         look();
         check();
+        CheckGround();
        //moving();
     }
     private void FixedUpdate()
     {
-        moving();
+        
+        Debug.Log("agent:" + agent.isOnNavMesh);
+        if (agent.isOnNavMesh)
+        {
+            moving();
+        }
+        else
+        {
+            agent.enabled = false;
+        }
     }
     private void OnDisable()
     {

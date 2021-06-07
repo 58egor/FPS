@@ -26,6 +26,7 @@ public class RayShooting : MonoBehaviour
     private Control contr;
     private bool isShooting=false;
     private Crosshair crosshair;
+    private Hitmarker hitmarker;
     public GameObject Object;
     private Animator animator;
     public int normal = 60;
@@ -38,6 +39,7 @@ public class RayShooting : MonoBehaviour
     {
         animator = GetComponentInParent<Animator>();
         crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
+        hitmarker= GameObject.Find("Hitmarker").GetComponent<Hitmarker>();
         contr = GetComponentInParent<Control>();
         curTimeout = timeout;
         camera = Camera.main;
@@ -45,6 +47,7 @@ public class RayShooting : MonoBehaviour
         curReloadTimer = reloadTimer;
         curShoots = firstInTarget;
         crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2,timeout);
+        hitmarker.UpdateHitmarher(Radius, timeout);
         text = GameObject.Find("Ammo").GetComponent<Text>();
         text.text = currentAmmo.ToString();
     }
@@ -65,9 +68,11 @@ public class RayShooting : MonoBehaviour
                 animator.SetBool("Pricel", true);
             }
             camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, zoom, Time.deltaTime * smooth);
+            crosshair.DisableOrActive(false);
         }
         else
         {
+            crosshair.DisableOrActive(true);
             isZoomed = false;
             animator.SetTrigger("PricelStop");
             animator.SetBool("Pricel", false);
@@ -109,7 +114,8 @@ public class RayShooting : MonoBehaviour
                     Debug.Log("Damage:" + hit[i].collider.name);
                     if (hit[i].collider.gameObject.layer == 9)
                     {
-                        hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);
+                       Color color=hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);
+                        hitmarker.Active(color);
                      //  Debug.DrawLine(ray.origin, ray, Color.green, 5);
                     }
                     else

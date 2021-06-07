@@ -22,38 +22,22 @@ public class Crosshair : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (speedActive > 0 && xWidhtActive < xWidht || speedActive < 0 && xWidhtActive > xWidht /*|| !(xWidht - 1.5 <= xWidhtActive && xWidhtActive <= xWidht + 1.5)*/)
-        {
-
-            xWidhtActive = xWidhtActive + speedActive * Time.deltaTime;
-            Debug.Log("xwidth active:" + xWidhtActive);
-        }
-        else
-        {
-        }
-        if (speedActive > 0 && yHeightActive < yHeight || speedActive < 0 && yHeightActive > yHeight/*!(yHeight - 1.5 <= yHeightActive && yHeightActive <= yHeight + 1.5)*/)
-        {
-            yHeightActive = yHeightActive + speedActive * Time.deltaTime;
-        }
-        else
-        {
-        }
         rect.sizeDelta = new Vector2(xWidhtActive, yHeightActive);
     }
-    public void UpdateCrosshair(float x, float y, bool znak)
-    {
-        if (isAdaptive)
-        {
-            xWidht = x;
-            yHeight = y;
-            if (!znak) { speedActive = speed; }
-            else
-            {
-                Debug.Log("minus speed");
-                speedActive = -speed*2.5f;
-            }
-        }
-    }
+    //public void UpdateCrosshair(float x, float y, bool znak)
+    //{
+    //    if (isAdaptive)
+    //    {
+    //        xWidht = x;
+    //        yHeight = y;
+    //        if (!znak) { speedActive = speed; }
+    //        else
+    //        {
+    //            Debug.Log("minus speed");
+    //            speedActive = -speed*2.5f;
+    //        }
+    //    }
+    //}
     public void UpdateCrosshairActive(float x, float y,float speed)
     {
         if (isAdaptive)
@@ -64,5 +48,9 @@ public class Crosshair : MonoBehaviour
             yHeight = y;
             this.speed = speed;
         }
+    }
+    public void DisableOrActive(bool action)
+    {
+        gameObject.SetActive(action);
     }
 }

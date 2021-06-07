@@ -26,7 +26,7 @@ public class EnemyInfo : MonoBehaviour
             }
         }
     }
-    public void Damage(int hp)
+    public Color Damage(int hp)
     {
         if (!start)
         {
@@ -36,8 +36,14 @@ public class EnemyInfo : MonoBehaviour
             {
                 gameObject.layer = 10;
                 animation.Play();
+                return Color.red;
+            }
+            else
+            {
+                return Color.white;
             }
         }
+        return Color.white;
     }
     public void Dead()
     {
