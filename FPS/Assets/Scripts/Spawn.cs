@@ -10,6 +10,7 @@ public class Spawn : MonoBehaviour
     float time;
     float xCenter,zCenter;
     float x, z;
+    public int spawnEnemys = 3;
     void Start()
     {
         time = timer;
@@ -27,17 +28,17 @@ public class Spawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (time > 0)
-        //{
-        //    time -= Time.deltaTime;
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < 3; i++)
-        //    {
-        //        Instantiate(enemy, new Vector3(Random.Range(xCenter - x, xCenter + x), 5, Random.Range(zCenter - z, zCenter + z)), enemy.transform.rotation);
-        //    }
-        //    time = timer;
-        //}
+        if (time > 0)
+        {
+            time -= Time.deltaTime;
+        }
+        else
+        {
+            for (int i = 0; i < spawnEnemys; i++)
+            {
+                Instantiate(enemy, new Vector3(Random.Range(xCenter - x, xCenter + x), 5, Random.Range(zCenter - z, zCenter + z)), enemy.transform.rotation);
+            }
+            time = timer;
+        }
     }
 }

@@ -214,13 +214,16 @@ public class Control : MonoBehaviour
         {
         Debug.Log("Kick");
         body.velocity = vec;//пинаем вверх
+        audio.Play("Jump");
         }
         else
         {
             if (Input.GetKeyDown(KeyCode.Space) &&  jumps != nJumps && !GlobalInfo.CheckWallRun())
             {
                 body.velocity = vec;//пинаем вверх
+                audio.Play("Jump" + jumps);
                 jumps++;
+                
             }
         }
     }

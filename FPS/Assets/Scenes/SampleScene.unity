@@ -286,7 +286,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 49595676}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.5, y: 5.27, z: 20.3}
+  m_LocalPosition: {x: 1, y: 5.27, z: 20.3}
   m_LocalScale: {x: 80, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -948,13 +948,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511254709}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec671c6751d9c44408ba81be3801ea89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 5114621653665246957, guid: 6d6bdc72c64eb9e43906acb74223c44b, type: 3}
   timer: 3
+  spawnEnemys: 0
 --- !u!1 &589276085
 GameObject:
   m_ObjectHideFlags: 0
@@ -2878,6 +2879,20 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     audioSource: {fileID: 0}
+  - name: Jump
+    clip: {fileID: 8300000, guid: 9721c5743c8eece42b42598a670fa1c6, type: 3}
+    volume: 1
+    pitch: 1.1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
+  - name: Jump0
+    clip: {fileID: 8300000, guid: 99081c316454ff246847ca722b4cd1a1, type: 3}
+    volume: 1
+    pitch: 1.1
+    loop: 0
+    playOnAwake: 0
+    audioSource: {fileID: 0}
 --- !u!114 &1339230094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4067,7 +4082,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2035385137}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.5, y: 5.27, z: -18.54}
+  m_LocalPosition: {x: 4.9, y: 5.27, z: -18.54}
   m_LocalScale: {x: 80, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4115,6 +4130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: HP
       value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114621653665246866, guid: 6d6bdc72c64eb9e43906acb74223c44b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5114621653665246867, guid: 6d6bdc72c64eb9e43906acb74223c44b,
         type: 3}
@@ -4203,13 +4223,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5114621653665246869, guid: 6d6bdc72c64eb9e43906acb74223c44b,
         type: 3}
-      propertyPath: m_BaseOffset
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5114621653665246869, guid: 6d6bdc72c64eb9e43906acb74223c44b,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.53
+      propertyPath: m_ObstacleAvoidanceType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5114621653665246956, guid: 6d6bdc72c64eb9e43906acb74223c44b,
         type: 3}
@@ -4224,17 +4239,7 @@ PrefabInstance:
     - target: {fileID: 5114621653665246957, guid: 6d6bdc72c64eb9e43906acb74223c44b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5114621653665246959, guid: 6d6bdc72c64eb9e43906acb74223c44b,
-        type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5114621653665246959, guid: 6d6bdc72c64eb9e43906acb74223c44b,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5114621653736288185, guid: 6d6bdc72c64eb9e43906acb74223c44b,
         type: 3}
