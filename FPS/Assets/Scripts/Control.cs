@@ -156,6 +156,7 @@ public class Control : MonoBehaviour
         rotationY += ((Input.GetAxis("Mouse Y")) * sensitivity)+otdachaY;
         rotationY = Mathf.Clamp(rotationY, headMinY, headMaxY);
         point.localEulerAngles = new Vector3(-rotationY, 0, 0);
+        //otdachaX = otdachaY = 0;
     }
     //определение направления движения
     void Dir()

@@ -43,9 +43,6 @@ public class MovingEnemy : MonoBehaviour
         Debug.Log("Distance:" + distance);
         if (distance > 1.2f)
         {
-            //    Vector3 dirToPlayer = transform.position - player.position;
-            //    Vector3 newPos = transform.position + dirToPlayer;
-            //    agent.Warp(newPos);
             agent.SetDestination(player.position);
         }
     }
@@ -65,14 +62,6 @@ public class MovingEnemy : MonoBehaviour
                         audio.Play("Hit");
                     }
                 }
-                //if (hit.distance < 1f)
-                //{
-                //    agent.speed = 0;
-                //}
-                //else
-                //{
-                //    agent.speed = speed;
-                //}
                 animator.SetBool("Hit", true);
                 Debug.Log("Player hit");
             }

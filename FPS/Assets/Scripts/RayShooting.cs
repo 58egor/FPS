@@ -33,6 +33,7 @@ public class RayShooting : MonoBehaviour
     public int zoom = 30;
     public float smooth = 5;
     bool isZoomed=false;
+    public bool singleShoot=false;
     Text text;
     // Start is called before the first frame update
     void Start()
@@ -78,7 +79,7 @@ public class RayShooting : MonoBehaviour
             animator.SetBool("Pricel", false);
             camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, normal, Time.deltaTime * smooth);
         }
-        if (Input.GetMouseButton(0) && curTimeout <= 0 && currentAmmo>0 && !isReload)
+        if (((Input.GetMouseButton(0) && !singleShoot) || (Input.GetMouseButtonDown(0) && singleShoot)) && curTimeout <= 0 && !isReload)
         {
             animator.SetBool("FireTest", true);
             currentAmmo--;//уменшьаем количество пуль
@@ -107,8 +108,7 @@ public class RayShooting : MonoBehaviour
             }
             for (int i = 0; i < hit.Length; i++)
             {
-                //Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
-             //   Debug.DrawLine(ray.origin, ray.direction * 10, Color.green, 5);
+
                 if (i <targets)
                 {
                     Debug.Log("Damage:" + hit[i].collider.name);
@@ -116,12 +116,11 @@ public class RayShooting : MonoBehaviour
                     {
                        Color color=hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);
                         hitmarker.Active(color);
-                     //  Debug.DrawLine(ray.origin, ray, Color.green, 5);
+
                     }
                     else
                     {
-                       // Debug.DrawLine(ray.origin, hit[i].point, Color.green, 5);
-          //              Instantiate(Object, hit[i].point, Object.transform.rotation);
+
                     }
                 }
                 else
@@ -133,21 +132,31 @@ public class RayShooting : MonoBehaviour
         else
         {
             curTimeout -= Time.deltaTime;
-            if (!Input.GetMouseButton(0) || isReload || currentAmmo <= 0)
+            if (!singleShoot)
+            {
+                if ((!Input.GetMouseButton(0)) || isReload || currentAmmo <= 0)
+                {
+                    curShoots = firstInTarget;
+                    animator.SetBool("FireTest", false);
+                    contr.otdachaY = 0;
+                    contr.otdachaX = 0;
+                    Debug.Log("stop sh");
+                }
+            }
+            else
             {
                 curShoots = firstInTarget;
                 animator.SetBool("FireTest", false);
-                contr.otdachaY = 0;
-                contr.otdachaX = 0;
-                Debug.Log("stop sh");
-                if (isShooting)//если мышка отпущена или не идет срельба
+                if (curTimeout <= 0)
                 {
-                    Debug.Log("Sto shooting");
-                    isShooting = false;
+
                     contr.otdachaY = 0;
                     contr.otdachaX = 0;
+                    Debug.Log("stop sh");
                 }
             }
+            if (curTimeout <= 0)
+                CheckAmmo();//функция отвечающая за перезарядку
         }
         if (Input.GetKey(KeyCode.R) && !isReload && !(currentAmmo==maxAmmo))
         {
@@ -156,7 +165,6 @@ public class RayShooting : MonoBehaviour
             Debug.Log("ActiveReload");
             isReload = true;
         }
-        CheckAmmo();//функция отвечающая за перезарядку
         text.text = currentAmmo.ToString();
     }
     public Vector3 Razbros()//функция отвечающая за разброс
@@ -206,20 +214,6 @@ public class RayShooting : MonoBehaviour
             }
         }
     }
-    //public void CheckRazbros()//увеличение разброса
-    //{
-    //    if (curRazbros<=0) //если отстреляли нужное количество пуль
-    //    {
-    //        curRazbros = razbros;
-    //        thisRazbros += step;//увеличиваем разброс на соответствующий шаг
-          
-    //        if (thisRazbros > maxRazbros)
-    //        {
-    //            thisRazbros = maxRazbros;
-    //        }
-    //        crosshair.UpdateCrosshair(thisRazbros * 2, thisRazbros * 2, false);
-    //    }
-    //}
     public void otdacha(int ammo)
     {
             isShooting = true;
@@ -245,12 +239,6 @@ public class RayShooting : MonoBehaviour
         }
         contr.otdachaX = otd;
         Debug.Log("X:" + otd);
-        //Debug.Log("currentAmmo:"+ammo+"%3:"+ammo % 2);
-        //if ((ammo % 2)==0)
-        //{
-        //    otdachaX = -otdachaX;
-        //   Debug.Log("Sbros");
-        //}
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
     {
