@@ -7,6 +7,7 @@ public class PlayerInfo : MonoBehaviour
 {
     public int HP=100;
     AudioSource audio;
+    AudioManager audioManager;
     Slider slider;
     public GameObject dead;
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class PlayerInfo : MonoBehaviour
         slider = GameObject.Find("HP").GetComponent<Slider>();
         slider.maxValue = HP;
         slider.value = HP;
+        audioManager = GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -27,10 +29,22 @@ public class PlayerInfo : MonoBehaviour
     {
         HP -= hp;
         audio.PlayOneShot(clip);
+
         if (HP <= 0)
         {
             dead.SetActive(true);
             Cursor.visible = true;
+            if (!audioManager.isPlaying("Dead"))
+            {
+                audioManager.Play("Dead");
+            }
+        }
+        else
+        {
+            if (!audioManager.isPlaying("Hit"))
+            {
+                audioManager.Play("Hit");
+            }
         }
     }
 }

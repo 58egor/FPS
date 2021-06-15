@@ -6,14 +6,12 @@ public class EnemyInfo : MonoBehaviour
 {
     public int HP = 100;
     Animation animation;
-    BoxCollider box;
     float timer = 3f;
     bool start = false;
     // Start is called before the first frame update
     void Start()
     {
         animation=transform.GetComponent<Animation>();
-        box = gameObject.GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame

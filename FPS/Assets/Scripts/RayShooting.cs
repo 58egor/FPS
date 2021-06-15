@@ -34,6 +34,7 @@ public class RayShooting : MonoBehaviour
     public float smooth = 5;
     bool isZoomed=false;
     public bool singleShoot=false;
+    int layer;
     Text text;
     // Start is called before the first frame update
     void Start()
@@ -51,6 +52,9 @@ public class RayShooting : MonoBehaviour
         hitmarker.UpdateHitmarher(Radius, timeout);
         text = GameObject.Find("Ammo").GetComponent<Text>();
         text.text = currentAmmo.ToString();
+        layer = 1 << 11;
+        layer = ~layer;
+        Debug.Log("Lyer:" + layer);
     }
 
     // Update is called once per frame
@@ -87,7 +91,7 @@ public class RayShooting : MonoBehaviour
             Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
             curTimeout = timeout;
             RaycastHit[] hit;
-            hit = Physics.RaycastAll(ray);//делаем выстрел
+            hit = Physics.RaycastAll(ray, Mathf.Infinity,layer);//делаем выстрел
             for (int i = 0; i < hit.Length; i++)
             {
 

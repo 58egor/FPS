@@ -7,9 +7,13 @@ public class ShootingEnemy : MonoBehaviour
 {
     Rigidbody body;
     Transform player;
-    public float speed = 15f;
+    public int speedMin = 15;
+    public int speedMax = 15;
+    int speed = 0;
     NavMeshAgent agent;
-    public float range = 10f;
+    public int rangeMin = 10;
+    public int rangeMax = 10;
+   int range = 0;
     private int layerMask;
     public float jumpDistance = 1.2f; // расстояние от центра объекта, до поверхности
     bool OnGround = false;
@@ -19,14 +23,23 @@ public class ShootingEnemy : MonoBehaviour
     public float ocheredTimeout = 0.5f;
     float curOcheredTimeout=0;
     float curTimeout=0;
-    public int numberOfBullets=1;
+    public int numberOfBulletsMin = 1;
+    public int numberOfBulletsMax = 4;
+    int numberOfBullets=1;
     int number;
-    public float bulletSpeed = 20;
+    public int bulletSpeedMin = 25;
+    public int bulletSpeedMax = 40;
+    int bulletSpeed = 20;
     bool Shoot = false;
+    AudioManager audio;
+
     // Start is called before the first frame update
     void Start()
     {
-        number = numberOfBullets;
+        speed = Random.Range(speedMin, speedMax);
+        range = Random.Range(rangeMin, rangeMax);
+        bulletSpeed = Random.Range(bulletSpeedMin, bulletSpeedMax);
+        numberOfBullets = Random.Range(numberOfBulletsMin, numberOfBulletsMax);
         number = numberOfBullets;
         curOcheredTimeout = ocheredTimeout;
         body = GetComponent<Rigidbody>();
@@ -36,6 +49,9 @@ public class ShootingEnemy : MonoBehaviour
         agent.speed = speed;
         layerMask = 1 << gameObject.layer | 1 << 2;
         layerMask = ~layerMask;
+        audio = GetComponent<AudioManager>();
+        audio.Play("Spawn");
+
     }
     void look()
     {
@@ -67,13 +83,20 @@ public class ShootingEnemy : MonoBehaviour
         }
         else
         {
+            if (!agent.isStopped)
+            {
+                audio.Play("Find");
+            }
             agent.isStopped = true;
+
             if (curTimeout <=0 || Shoot)
             {
+                
                 Shoot = true;
                 curTimeout = timeout;
                 if (curOcheredTimeout <= 0)
                 {
+                    audio.Play("Fire");
                     GameObject spawn = Instantiate(bullet, gunPoint.transform.position, Quaternion.identity);
                     Rigidbody bulletInstance = spawn.GetComponent<Rigidbody>();
                     bulletInstance.velocity = gunPoint.transform.forward * bulletSpeed;
