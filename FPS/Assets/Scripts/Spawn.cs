@@ -5,7 +5,7 @@ using UnityEngine;
 public class Spawn : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject enemy;
+    public GameObject[] enemy;
     public float timer = 3f;
     float time;
     float xCenter,zCenter;
@@ -21,7 +21,9 @@ public class Spawn : MonoBehaviour
         Debug.Log("Scale:" + x);
         for (int i = 0; i < 10; i++)
         {
-            Instantiate(enemy, new Vector3(Random.Range(xCenter - x, xCenter + x), 5, Random.Range(zCenter - z, zCenter + z)), enemy.transform.rotation);
+            int j = Random.Range(0, enemy.Length);
+            Debug.Log("Lenght:" + enemy.Length);
+            Instantiate(enemy[j], new Vector3(Random.Range(xCenter - x, xCenter + x), 5, Random.Range(zCenter - z, zCenter + z)), enemy[j].transform.rotation);
         }
     }
 
@@ -36,7 +38,9 @@ public class Spawn : MonoBehaviour
         {
             for (int i = 0; i < spawnEnemys; i++)
             {
-                Instantiate(enemy, new Vector3(Random.Range(xCenter - x, xCenter + x), 5, Random.Range(zCenter - z, zCenter + z)), enemy.transform.rotation);
+                int j = Random.Range(0, enemy.Length);
+                
+                Instantiate(enemy[j], new Vector3(Random.Range(xCenter - x, xCenter + x), 5, Random.Range(zCenter - z, zCenter + z)), enemy[j].transform.rotation);
             }
             time = timer;
         }

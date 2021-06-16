@@ -1029,8 +1029,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511254709}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.27, y: 0, z: 0}
-  m_LocalScale: {x: 34.08941, y: 50, z: 36}
+  m_LocalPosition: {x: 20.14, y: -0, z: 21.27}
+  m_LocalScale: {x: 77.702866, y: 49.999992, z: 78.54619}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 13
@@ -1042,12 +1042,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511254709}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec671c6751d9c44408ba81be3801ea89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 5114621653665246957, guid: 6d6bdc72c64eb9e43906acb74223c44b, type: 3}
+  enemy:
+  - {fileID: 3947471536211237542, guid: ade8afd9054a2454b8afb84440a3d9f0, type: 3}
+  - {fileID: 5114621653665246957, guid: 6d6bdc72c64eb9e43906acb74223c44b, type: 3}
   timer: 3
   spawnEnemys: 3
 --- !u!1 &589276085
@@ -4109,7 +4111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 25
   targets: 1
-  timeout: 0.1
+  timeout: 0.125
   maxAmmo: 30
   reloadTimer: 1
   cam: {fileID: 806318222}
