@@ -150,10 +150,10 @@ public class RayShooting : MonoBehaviour
             else
             {
                 curShoots = firstInTarget;
-                animator.SetBool("FireTest", false);
+               // animator.SetBool("FireTest", false);
                 if (curTimeout <= 0)
                 {
-
+                    animator.SetBool("FireTest", false);
                     contr.otdachaY = 0;
                     contr.otdachaX = 0;
                     Debug.Log("stop sh");
