@@ -132,7 +132,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: Pricel
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
@@ -185,7 +185,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: Pricel
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
@@ -408,7 +408,7 @@ AnimatorStateMachine:
     m_Position: {x: 610, y: 450, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4998810877774236958}
-    m_Position: {x: 350, y: 170, z: 0}
+    m_Position: {x: 340, y: 180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7327355756995815838}
     m_Position: {x: 610, y: 70, z: 0}

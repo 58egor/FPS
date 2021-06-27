@@ -495,7 +495,6 @@ MonoBehaviour:
   otdachaYmax: 0.2
   otdachaXmin: 0
   otdachaXmax: 0.2
-  Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
   normal: 60
   zoom: 30
   smooth: 5
@@ -630,17 +629,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 35
   targets: 1
-  timeout: 0.215
+  timeout: 0.23
   maxAmmo: 10
   reloadTimer: 0.365
   cam: {fileID: 0}
   Radius: 5
   firstInTarget: 0
-  otdachaYmin: 0.15
-  otdachaYmax: 0.25
+  otdachaYmin: 0.05
+  otdachaYmax: 0.15
   otdachaXmin: 0
   otdachaXmax: 0
-  Object: {fileID: 0}
   normal: 60
   zoom: 30
   smooth: 5
@@ -1188,7 +1186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &511254710
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1601,7 +1599,6 @@ MonoBehaviour:
   otdachaYmax: 0.2
   otdachaXmin: 0
   otdachaXmax: 0.2
-  Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
   normal: 60
   zoom: 30
   smooth: 5
@@ -1638,7 +1635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &631807959
 Transform:
   m_ObjectHideFlags: 0
@@ -4383,6 +4380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1890007746}
   - component: {fileID: 1890007747}
+  - component: {fileID: 1890007748}
   m_Layer: 8
   m_Name: Weapons
   m_TagString: Untagged
@@ -4421,6 +4419,21 @@ MonoBehaviour:
   speed: 3
   scaleX: 0.2
   scaleY: 0.2
+--- !u!114 &1890007748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890007745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44102ebc1db2d46429039853dd5a24e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guns:
+  - {fileID: 1306395774}
+  - {fileID: 631807958}
 --- !u!1 &1890157623
 GameObject:
   m_ObjectHideFlags: 0
@@ -4560,7 +4573,6 @@ MonoBehaviour:
   otdachaYmax: 0.15
   otdachaXmin: 0
   otdachaXmax: 0.15
-  Object: {fileID: 5459722770732076507, guid: eac4305ed9a34484db83e90de9b30510, type: 3}
   normal: 60
   zoom: 30
   smooth: 7

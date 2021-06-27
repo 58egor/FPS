@@ -24,20 +24,7 @@ public class Crosshair : MonoBehaviour
     {
         rect.sizeDelta = new Vector2(xWidhtActive, yHeightActive);
     }
-    //public void UpdateCrosshair(float x, float y, bool znak)
-    //{
-    //    if (isAdaptive)
-    //    {
-    //        xWidht = x;
-    //        yHeight = y;
-    //        if (!znak) { speedActive = speed; }
-    //        else
-    //        {
-    //            Debug.Log("minus speed");
-    //            speedActive = -speed*2.5f;
-    //        }
-    //    }
-    //}
+
     public void UpdateCrosshairActive(float x, float y,float speed)
     {
         if (isAdaptive)

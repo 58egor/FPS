@@ -12,8 +12,8 @@ public class RayShooting : MonoBehaviour
     private bool isReload = false;//актива ли перезарядка
     public float reloadTimer;//время перезарядки
     public Transform cam;
-    public float Radius;
-    public int firstInTarget=5;
+    public float Radius;//радиус разброса
+    public int firstInTarget=5;//количество пуль которые попадают при самом начале выстрела
     private int curShoots;
     public float otdachaYmin = 0;//отдача по у
     public float otdachaYmax = 0;//отдача по у
@@ -23,33 +23,32 @@ public class RayShooting : MonoBehaviour
     private int currentAmmo;//текущее количество патронов
     private float curTimeout;//текущая задержка между выстрелами
     private Camera camera;
-    private Control contr;
+    private Control contr;//доступ к скрпиту для передачи отдачи
     private bool isShooting=false;
-    private Crosshair crosshair;
-    private Hitmarker hitmarker;
-    public GameObject Object;
+    private Crosshair crosshair;//доступ к прицелу
+    private Hitmarker hitmarker;//доступ к хитмаркеру
     private Animator animator;
-    public int normal = 60;
-    public int zoom = 30;
+    public int normal = 60;//нормальый фов
+    public int zoom = 30;//при зуме
     public float smooth = 5;
     bool isZoomed=false;
     public bool singleShoot=false;
     int layer;
-    Text text;
+    Text text;//доступк счетчику патронов
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponentInParent<Animator>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
-        hitmarker= GameObject.Find("Hitmarker").GetComponent<Hitmarker>();
-        contr = GetComponentInParent<Control>();
+        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();//получаем доступ к прицелу
+        hitmarker= GameObject.Find("Hitmarker").GetComponent<Hitmarker>();//получаем доступ к хитмаркеру
+        contr = GetComponentInParent<Control>();//получаем доступ к скрипту
         curTimeout = timeout;
         camera = Camera.main;
         currentAmmo = maxAmmo;
         curReloadTimer = reloadTimer;
         curShoots = firstInTarget;
-        crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2,timeout);
-        hitmarker.UpdateHitmarher(Radius, timeout);
+        crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2,timeout);//передаем данные для прицела
+        hitmarker.UpdateHitmarher(Radius, timeout);//передаем данные хитмаркеру
         text = GameObject.Find("Ammo").GetComponent<Text>();
         text.text = currentAmmo.ToString();
         layer = 1 << 11;
@@ -64,26 +63,26 @@ public class RayShooting : MonoBehaviour
     void Update()
     {
         crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2, timeout);
-        if (Input.GetMouseButton(1) && !isReload)
+        if (Input.GetMouseButton(1) && !isReload)//если нажали правую кнопку мыши то прицелились
         {
             if (!isZoomed)
             {
                 isZoomed = true;
-                animator.SetTrigger("PricelStart");
+                animator.SetTrigger("PricelStart");//активируем анимацию
                 animator.SetBool("Pricel", true);
             }
-            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, zoom, Time.deltaTime * smooth);
-            crosshair.DisableOrActive(false);
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, zoom, Time.deltaTime * smooth);//изменяем фов
+            crosshair.DisableOrActive(false);//выключаем прицел
         }
-        else
+        else//если отжали
         {
-            crosshair.DisableOrActive(true);
+            crosshair.DisableOrActive(true);//велючаем прицел
             isZoomed = false;
             animator.SetTrigger("PricelStop");
             animator.SetBool("Pricel", false);
-            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, normal, Time.deltaTime * smooth);
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, normal, Time.deltaTime * smooth);//вернули фов в норму
         }
-        if (((Input.GetMouseButton(0) && !singleShoot) || (Input.GetMouseButtonDown(0) && singleShoot)) && curTimeout <= 0 && !isReload)
+        if (((Input.GetMouseButton(0) && !singleShoot) || (Input.GetMouseButtonDown(0) && singleShoot)) && curTimeout <= 0 && !isReload)//если нажали кнопку выстрела
         {
             animator.SetBool("FireTest", true);
             currentAmmo--;//уменшьаем количество пуль
@@ -92,7 +91,7 @@ public class RayShooting : MonoBehaviour
             curTimeout = timeout;
             RaycastHit[] hit;
             hit = Physics.RaycastAll(ray, Mathf.Infinity,layer);//делаем выстрел
-            for (int i = 0; i < hit.Length; i++)
+            for (int i = 0; i < hit.Length; i++)//соритуем объекты в которые попали по увеличению дистанции
             {
 
                 for (int j = i; j < hit.Length; j++)
@@ -113,13 +112,13 @@ public class RayShooting : MonoBehaviour
             for (int i = 0; i < hit.Length; i++)
             {
 
-                if (i <targets)
+                if (i <targets)//передаем урон определенному количество протинвиков
                 {
                     Debug.Log("Damage:" + hit[i].collider.name);
                     if (hit[i].collider.gameObject.layer == 9)
                     {
-                       Color color=hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);
-                        hitmarker.Active(color);
+                       Color color=hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);//передаем урон и получаем инфомрацию о полученном уроне противником
+                        hitmarker.Active(color);//активируем хитмаркер(белый-попал,красный-убил)
 
                     }
                     else
@@ -133,25 +132,25 @@ public class RayShooting : MonoBehaviour
                 }
             }
         }
-        else
+        else//если не стреляем или кд
         {
-            curTimeout -= Time.deltaTime;
-            if (!singleShoot)
-            {
-                if ((!Input.GetMouseButton(0)) || isReload || currentAmmo <= 0)
+            curTimeout -= Time.deltaTime;//уменьшаем кд
+            if (!singleShoot)//проверям одиночный выстрел или нет
+            {//нет
+                if ((!Input.GetMouseButton(0)) || isReload || currentAmmo <= 0)//если мышь отпущена или перезарядка
                 {
-                    curShoots = firstInTarget;
+                    curShoots = firstInTarget;//первые н пуль снова бьют в точку
                     animator.SetBool("FireTest", false);
-                    contr.otdachaY = 0;
+                    contr.otdachaY = 0;//выключаем отдачу
                     contr.otdachaX = 0;
                     Debug.Log("stop sh");
                 }
             }
             else
-            {
+            {//да
                 curShoots = firstInTarget;
                // animator.SetBool("FireTest", false);
-                if (curTimeout <= 0)
+                if (curTimeout <= 0)//если кд кончилось и на мышь не нажали то выстрела нету
                 {
                     animator.SetBool("FireTest", false);
                     contr.otdachaY = 0;
@@ -162,7 +161,7 @@ public class RayShooting : MonoBehaviour
             if (curTimeout <= 0)
                 CheckAmmo();//функция отвечающая за перезарядку
         }
-        if (Input.GetKey(KeyCode.R) && !isReload && !(currentAmmo==maxAmmo))
+        if (Input.GetKey(KeyCode.R) && !isReload && !(currentAmmo==maxAmmo))//активриуем перезарядку
         {
             animator.SetTrigger("Reload");
             animator.SetBool("FireTest", false);
@@ -222,26 +221,26 @@ public class RayShooting : MonoBehaviour
     {
             isShooting = true;
         float otd;
-        if (isZoomed)
+        if (isZoomed)//если прицелились то отдача уменьшена в 2 раза
         {
-            otd = Random.Range(otdachaYmin/2, otdachaYmax/2);
+            otd = Random.Range(otdachaYmin/2, otdachaYmax/2);//рандомим отдачу по координате у
         }
         else
         {
-            otd = Random.Range(otdachaYmin, otdachaYmax);
+            otd = Random.Range(otdachaYmin, otdachaYmax);//рандомим отдачу по координате у
         }
-            contr.otdachaY = otd;
+            contr.otdachaY = otd;//передаем эту отдачу
             Debug.Log("Y:" + otd);
         if (!isZoomed)
         {
-            otd = Random.Range(otdachaXmin, otdachaXmax);
-            
+            otd = Random.Range(otdachaXmin, otdachaXmax);//рандомим отдачу по координате х
+
         }
         else
         {
-            otd = Random.Range(otdachaXmin/2, otdachaXmax/2);
+            otd = Random.Range(otdachaXmin/2, otdachaXmax/2);//рандомим отдачу по координате х
         }
-        contr.otdachaX = otd;
+        contr.otdachaX = otd;//передаем отдачу
         Debug.Log("X:" + otd);
     }
     void OnDrawGizmosSelected() // подсветка, для визуальной настройки jumpDistance
@@ -251,5 +250,10 @@ public class RayShooting : MonoBehaviour
         Gizmos.DrawRay(camera.transform.position, camera.transform.forward);
         Gizmos.color = Color.red;
 
+    }
+    private void OnDisable()
+    {
+        curReloadTimer = reloadTimer;
+        animator.Rebind();
     }
 }

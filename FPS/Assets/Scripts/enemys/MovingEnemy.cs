@@ -26,34 +26,34 @@ public class MovingEnemy : MonoBehaviour
         animator = transform.GetChild(0).GetComponent<Animator>();
         audio = GetComponent<AudioManager>();
         audio.Play("Charge");
-        speed = Random.Range(4, 13);
+        speed = Random.Range(4, 13);//рандомим скорость
         agent.speed = speed;
         layerMask = 1 << gameObject.layer | 1 << 2;
         layerMask = ~layerMask;
     }
     void look()
     {
-        transform.LookAt(player);
+        transform.LookAt(player);//смотрим на героя
     }
     void moving()
     {
         //Vector3 forward = transform.forward;
         //body.MovePosition(body.position + forward* speed * Time.fixedDeltaTime);
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distance = Vector3.Distance(transform.position, player.position);// получаем дистанцию
         Debug.Log("Distance:" + distance);
-        if (distance > 1.2f)
+        if (distance > 1.2f)//если не достигли
         {
-            agent.SetDestination(player.position);
+            agent.SetDestination(player.position);//то идем на героя
         }
     }
-    void check()
+    void check()//проверяем рядом ли герой
     {
         RaycastHit hit;
-        Physics.Raycast(transform.position,transform.forward, out hit,range);
+        Physics.Raycast(transform.position,transform.forward, out hit,range);//пускаем луч на определенную дистанцию
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) *range, Color.yellow);
-        if (hit.collider != null)
+        if (hit.collider != null)//если есть попадание
         {
-            if (hit.transform.gameObject.layer == 8)
+            if (hit.transform.gameObject.layer == 8)//и попали по герою
             {
                 if (Random.Range(0, 100) < procentOfSound)
                 {
@@ -62,12 +62,12 @@ public class MovingEnemy : MonoBehaviour
                         audio.Play("Hit");
                     }
                 }
-                animator.SetBool("Hit", true);
+                animator.SetBool("Hit", true);//то запускаем анимацию ударов
                 Debug.Log("Player hit");
             }
-            else
+            else//если нет
             {
-                animator.SetBool("Hit", false);
+                animator.SetBool("Hit", false);//то выключаем
             }
             Debug.Log("Distance:" + hit.distance);
         }

@@ -25,7 +25,7 @@ public class PlayerInfo : MonoBehaviour
     {
         slider.value = HP;
     }
-    public void GetDamage(int hp,AudioClip clip)
+    public void GetDamage(int hp,AudioClip clip)//урон получаемый героем
     {
         HP -= hp;
         audio.PlayOneShot(clip);

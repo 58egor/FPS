@@ -28,7 +28,7 @@ public class EnemyInfo : MonoBehaviour
         //box.enabled = false;
         //box.enabled=true;
     }
-    public Color Damage(int hp)
+    public Color Damage(int hp)//урон получаемый противником
     {
         if (!start)
         {
@@ -47,7 +47,7 @@ public class EnemyInfo : MonoBehaviour
         }
         return Color.white;
     }
-    public void Dead()
+    public void Dead()//смерть
     {
         start = true;
     }

@@ -24,28 +24,28 @@ public class Hitmarker : MonoBehaviour
     {
         if (rect.sizeDelta.x < radius * 2)
         {
-            rect.sizeDelta = new Vector2(rect.sizeDelta.x + speed * Time.deltaTime, rect.sizeDelta.x + speed * Time.deltaTime);
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x + speed * Time.deltaTime, rect.sizeDelta.x + speed * Time.deltaTime);//изменяем размер 
         }
-        if (timer < (timeout/4+timeout/2))
+        if (timer < (timeout/4+timeout/2))//проверяем затраченное время
         {
             timer += Time.deltaTime;
         }
-        else
+        else//если время вышло то вырубаем хитмаркер
         {
-            for (int i = 0; i < parts.Length; i++)
+            for (int i = 0; i < parts.Length; i++)//когда достигли цели
             {
-                parts[i].gameObject.SetActive(false);
+                parts[i].gameObject.SetActive(false);//вырубаем хитмаркер
             }
         }
         
     }
-    public void UpdateHitmarher(float rad, float time)
+    public void UpdateHitmarher(float rad, float time)//изменяем хитмаркер в соответсвии с оружием
     {
         radius = rad;
         timeout = time;
         speed = (radius*2) / (timeout / 2);
     }
-    public void Active(Color color)
+    public void Active(Color color)//активируем с полученным цветом
     {
         timer = 0;
         rect.sizeDelta = new Vector2(0, 0);

@@ -7,28 +7,28 @@ public class ShootingEnemy : MonoBehaviour
 {
     Rigidbody body;
     Transform player;
-    public int speedMin = 15;
-    public int speedMax = 15;
+    public int speedMin = 15;//мин скорость
+    public int speedMax = 15;//макс скорость
     int speed = 0;
     NavMeshAgent agent;
-    public int rangeMin = 10;
-    public int rangeMax = 10;
+    public int rangeMin = 10;//радиус при котором начинает стрелять минимальый
+    public int rangeMax = 10;//максимальный
    int range = 0;
     private int layerMask;
     public float jumpDistance = 1.2f; // расстояние от центра объекта, до поверхности
     bool OnGround = false;
     public GameObject bullet;
     public GameObject gunPoint;
-    public float timeout = 1f;
-    public float ocheredTimeout = 0.5f;
+    public float timeout = 1f;//кд между выстрелами
+    public float ocheredTimeout = 0.5f;//кд между очередью выстрелов
     float curOcheredTimeout=0;
     float curTimeout=0;
-    public int numberOfBulletsMin = 1;
-    public int numberOfBulletsMax = 4;
+    public int numberOfBulletsMin = 1;//минимальное количество выпускаем пуль
+    public int numberOfBulletsMax = 4;//максимальное количество
     int numberOfBullets=1;
     int number;
-    public int bulletSpeedMin = 25;
-    public int bulletSpeedMax = 40;
+    public int bulletSpeedMin = 25;//скорость пули мин
+    public int bulletSpeedMax = 40;//макс
     int bulletSpeed = 20;
     bool Shoot = false;
     AudioManager audio;
@@ -36,10 +36,10 @@ public class ShootingEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed = Random.Range(speedMin, speedMax);
-        range = Random.Range(rangeMin, rangeMax);
-        bulletSpeed = Random.Range(bulletSpeedMin, bulletSpeedMax);
-        numberOfBullets = Random.Range(numberOfBulletsMin, numberOfBulletsMax);
+        speed = Random.Range(speedMin, speedMax);//ранодомим скорость
+        range = Random.Range(rangeMin, rangeMax);//рандомим радиус
+        bulletSpeed = Random.Range(bulletSpeedMin, bulletSpeedMax);//рандомим скорость пули
+        numberOfBullets = Random.Range(numberOfBulletsMin, numberOfBulletsMax);//рандомим количество пуль
         number = numberOfBullets;
         curOcheredTimeout = ocheredTimeout;
         body = GetComponent<Rigidbody>();
@@ -55,7 +55,7 @@ public class ShootingEnemy : MonoBehaviour
     }
     void look()
     {
-        transform.LookAt(player);
+        transform.LookAt(player);//смотрим на противника
     }
     void CheckGround()
     {
@@ -74,14 +74,14 @@ public class ShootingEnemy : MonoBehaviour
     }
     void moving()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distance = Vector3.Distance(transform.position, player.position);//определяем дистанцию до героя
         Debug.Log("Distance:" + distance);
-        if (distance > range)
+        if (distance > range)//если больше радиуса
         {
             agent.isStopped = false;
-            agent.SetDestination(player.position);
+            agent.SetDestination(player.position);//то идем к нему с помощью нав меш агента
         }
-        else
+        else//иначе
         {
             if (!agent.isStopped)
             {
@@ -94,7 +94,7 @@ public class ShootingEnemy : MonoBehaviour
                 
                 Shoot = true;
                 curTimeout = timeout;
-                if (curOcheredTimeout <= 0)
+                if (curOcheredTimeout <= 0)//стреляем очереью в героя
                 {
                     audio.Play("Fire");
                     GameObject spawn = Instantiate(bullet, gunPoint.transform.position, Quaternion.identity);
@@ -125,12 +125,12 @@ public class ShootingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        look();
-        CheckGround();
+        look();//смотрим на героя
+        CheckGround();//проверяем на земле ли
     }
     private void FixedUpdate()
     {
-        moving();
+        moving();//двигаемся
     }
     void OnDrawGizmosSelected()
     {
