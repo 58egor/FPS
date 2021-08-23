@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class RayShooting : MonoBehaviour
 {
+    public int bullets = 1;//количество пуль
     public int damage = 1;//наносимый урон
     public int targets = 1;//количество поражаемых целей
     public float timeout = 0.2f;//задержка между выстрелами
@@ -84,52 +85,11 @@ public class RayShooting : MonoBehaviour
         }
         if (((Input.GetMouseButton(0) && !singleShoot) || (Input.GetMouseButtonDown(0) && singleShoot)) && curTimeout <= 0 && !isReload)//если нажали кнопку выстрела
         {
-            animator.SetBool("FireTest", true);
             currentAmmo--;//уменшьаем количество пуль
-            otdacha(currentAmmo);//вызываем функцию отдачи
-            Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
-            curTimeout = timeout;
-            RaycastHit[] hit;
-            hit = Physics.RaycastAll(ray, Mathf.Infinity,layer);//делаем выстрел
-            for (int i = 0; i < hit.Length; i++)//соритуем объекты в которые попали по увеличению дистанции
+            otdacha();//вызываем функцию отдачи
+            for (int i = 0; i < bullets; i++)
             {
-
-                for (int j = i; j < hit.Length; j++)
-                {
-                    if (hit[i].distance > hit[j].distance)
-                    {
-                        RaycastHit copy = hit[i];
-                        hit[i] = hit[j];
-                        hit[j] = copy;
-                    }
-                }
-            }
-            Debug.Log("hit lenght:" + hit.Length);
-            for(int i=0;i < hit.Length; i++)
-            {
-                Debug.Log("hit:" + hit[i].collider.name);
-            }
-            for (int i = 0; i < hit.Length; i++)
-            {
-
-                if (i <targets)//передаем урон определенному количество протинвиков
-                {
-                    Debug.Log("Damage:" + hit[i].collider.name);
-                    if (hit[i].collider.gameObject.layer == 9)
-                    {
-                       Color color=hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);//передаем урон и получаем инфомрацию о полученном уроне противником
-                        hitmarker.Active(color);//активируем хитмаркер(белый-попал,красный-убил)
-
-                    }
-                    else
-                    {
-
-                    }
-                }
-                else
-                {
-                    break;
-                }
+                Shoot();//вызываем функцию выстрела
             }
         }
         else//если не стреляем или кд
@@ -169,6 +129,54 @@ public class RayShooting : MonoBehaviour
             isReload = true;
         }
         text.text = currentAmmo.ToString();
+    }
+    void Shoot()//функция выстрела
+    {
+        animator.SetBool("FireTest", true);
+        Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
+        curTimeout = timeout;
+        RaycastHit[] hit;
+        hit = Physics.RaycastAll(ray, Mathf.Infinity, layer);//делаем выстрел
+        for (int i = 0; i < hit.Length; i++)//соритуем объекты в которые попали по увеличению дистанции
+        {
+
+            for (int j = i; j < hit.Length; j++)
+            {
+                if (hit[i].distance > hit[j].distance)
+                {
+                    RaycastHit copy = hit[i];
+                    hit[i] = hit[j];
+                    hit[j] = copy;
+                }
+            }
+        }
+        Debug.Log("hit lenght:" + hit.Length);
+        for (int i = 0; i < hit.Length; i++)
+        {
+            Debug.Log("hit:" + hit[i].collider.name);
+        }
+        for (int i = 0; i < hit.Length; i++)
+        {
+
+            if (i < targets)//передаем урон определенному количество протинвиков
+            {
+                Debug.Log("Damage:" + hit[i].collider.name);
+                if (hit[i].collider.gameObject.layer == 9)
+                {
+                    Color color = hit[i].collider.GetComponent<EnemyInfo>().Damage(damage);//передаем урон и получаем инфомрацию о полученном уроне противником
+                    hitmarker.Active(color);//активируем хитмаркер(белый-попал,красный-убил)
+
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
     }
     public Vector3 Razbros()//функция отвечающая за разброс
     {
@@ -217,7 +225,7 @@ public class RayShooting : MonoBehaviour
             }
         }
     }
-    public void otdacha(int ammo)
+    public void otdacha()
     {
             isShooting = true;
         float otd;
