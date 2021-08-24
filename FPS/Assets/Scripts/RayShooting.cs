@@ -10,6 +10,8 @@ public class RayShooting : MonoBehaviour
     public int targets = 1;//количество поражаемых целей
     public float timeout = 0.2f;//задержка между выстрелами
     public int maxAmmo=30;//максимальное количество патронов в обоиме
+    public bool singleReload = false;
+    bool isSingleReload = false;
     private bool isReload = false;//актива ли перезарядка
     public float reloadTimer;//время перезарядки
     public Transform cam;
@@ -33,6 +35,8 @@ public class RayShooting : MonoBehaviour
     public int zoom = 30;//при зуме
     public float smooth = 5;
     bool isZoomed=false;
+    public bool zoomExist = true;
+    public float zoomBuff = 2;
     public bool singleShoot=false;
     int layer;
     Text text;//доступк счетчику патронов
@@ -64,7 +68,7 @@ public class RayShooting : MonoBehaviour
     void Update()
     {
         crosshair.UpdateCrosshairActive(Radius * 2, Radius * 2, timeout);
-        if (Input.GetMouseButton(1) && !isReload)//если нажали правую кнопку мыши то прицелились
+        if (Input.GetMouseButton(1) && !isReload && zoomExist)//если нажали правую кнопку мыши то прицелились
         {
             if (!isZoomed)
             {
@@ -85,8 +89,14 @@ public class RayShooting : MonoBehaviour
         }
         if (((Input.GetMouseButton(0) && !singleShoot) || (Input.GetMouseButtonDown(0) && singleShoot)) && curTimeout <= 0 && !isReload)//если нажали кнопку выстрела
         {
+            if (singleReload)
+            {
+                animator.SetBool("ReloadStop", false);
+                isSingleReload = false;
+            }
             currentAmmo--;//уменшьаем количество пуль
             otdacha();//вызываем функцию отдачи
+            curTimeout = timeout;
             for (int i = 0; i < bullets; i++)
             {
                 Shoot();//вызываем функцию выстрела
@@ -104,6 +114,7 @@ public class RayShooting : MonoBehaviour
                     contr.otdachaY = 0;//выключаем отдачу
                     contr.otdachaX = 0;
                     Debug.Log("stop sh");
+                    CheckAmmo();//функция отвечающая за перезарядку
                 }
             }
             else
@@ -116,17 +127,22 @@ public class RayShooting : MonoBehaviour
                     contr.otdachaY = 0;
                     contr.otdachaX = 0;
                     Debug.Log("stop sh");
+                    CheckAmmo();//функция отвечающая за перезарядку
                 }
             }
-            if (curTimeout <= 0)
-                CheckAmmo();//функция отвечающая за перезарядку
+                
         }
-        if (Input.GetKey(KeyCode.R) && !isReload && !(currentAmmo==maxAmmo))//активриуем перезарядку
+        if (Input.GetKey(KeyCode.R) && !isReload && !(currentAmmo==maxAmmo) && curTimeout <= 0)//активриуем перезарядку
         {
             animator.SetTrigger("Reload");
             animator.SetBool("FireTest", false);
             Debug.Log("ActiveReload");
             isReload = true;
+            isZoomed = false;
+            if (singleReload)
+            {
+                animator.SetBool("ReloadStop", true);
+            }
         }
         text.text = currentAmmo.ToString();
     }
@@ -134,7 +150,6 @@ public class RayShooting : MonoBehaviour
     {
         animator.SetBool("FireTest", true);
         Ray ray = camera.ScreenPointToRay(Razbros());//создаем луч, вызывая функцию,формирующая направление луча
-        curTimeout = timeout;
         RaycastHit[] hit;
         hit = Physics.RaycastAll(ray, Mathf.Infinity, layer);//делаем выстрел
         for (int i = 0; i < hit.Length; i++)//соритуем объекты в которые попали по увеличению дистанции
@@ -183,7 +198,16 @@ public class RayShooting : MonoBehaviour
         float sdvigX = 0;
         float sdvigY = 0;
         float rad = Radius;
-        if (isZoomed) rad = rad / 2;
+        if (isZoomed) {
+            if (zoomBuff == 0)
+            {
+                rad = 0;
+            }
+            else
+            {
+                rad = rad / zoomBuff;
+            }
+        }
         if (curShoots == 0)
         {
             sdvigX = Random.Range(-rad, rad);//радномим отклонение
@@ -204,19 +228,41 @@ public class RayShooting : MonoBehaviour
     }
     public void CheckAmmo() {//проверяем патроны
         
-        if (currentAmmo <= 0 || isReload)//если патронов нету
+        if (currentAmmo <= 0 || isReload || isSingleReload)//если патронов нету
         {
-            if (!isReload)
+            if (!isReload && !isSingleReload)
             {
                 animator.SetTrigger("Reload");
+                if (singleReload)
+                {
+                    animator.SetBool("ReloadStop", true);
+                }
                 isZoomed = false;
                 isReload = true;
             }
             Debug.Log("Reload:"+curReloadTimer);
             if (curReloadTimer <= 0)
             {
-                isReload = false;
-                currentAmmo = maxAmmo;
+
+                if (!singleReload)
+                {
+                    currentAmmo = maxAmmo;
+                    isReload = false;
+                }
+                else
+                {
+                    currentAmmo++;
+                    isReload = false;
+                    if (currentAmmo != maxAmmo) { 
+                        isSingleReload = true;
+                    }
+                    else
+                    {
+                        animator.SetBool("ReloadStop", false);
+                        isSingleReload = false;
+
+                    }
+                }
                 curReloadTimer = reloadTimer;
             }
             else
@@ -227,7 +273,7 @@ public class RayShooting : MonoBehaviour
     }
     public void otdacha()
     {
-            isShooting = true;
+        isShooting = true;
         float otd;
         if (isZoomed)//если прицелились то отдача уменьшена в 2 раза
         {
